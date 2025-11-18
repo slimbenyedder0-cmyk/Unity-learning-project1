@@ -8,6 +8,11 @@ public class Observer : MonoBehaviour
 
     public transform myCylinder;
     public bool isMoved = false;
+    public bool isRotated = false;
+    private bool hasScored = false;
+    public int Score = 0;
+    private Vector3 cylinderPosition;
+    private Quaternion cylinderRotation;
 
    
 
@@ -16,6 +21,7 @@ public class Observer : MonoBehaviour
     void Start()
     {
         cylinderPosition = referenceObject.transform.position;
+        cylinderRotation = referenceObject.transform.rotation;
 
     }
 
@@ -26,5 +32,16 @@ public class Observer : MonoBehaviour
         {
             isMoved = true;
         }
+        if (cylinderRotation != referenceObject.transform.rotation)
+        {
+            isRotated = true;
+        }
+        if (isMoved && isRotated && !hasScored)
+        {
+            hasScored = true;
+            
+            Score ++;
+        }
     }
+
 }
