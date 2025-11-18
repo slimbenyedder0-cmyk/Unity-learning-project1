@@ -4,9 +4,9 @@ public class Observer : MonoBehaviour
 // Cette classe observer cherche à observer les quilles "Cylinder" from inside Cylinder.cs
 
 {
-    public GameObejct referenceObject;
+    public GameObject referenceObject;
 
-    public transform myCylinder;
+    public Transform myCylinder;
     public bool isMoved = false;
     public bool isRotated = false;
     private bool hasScored = false;
