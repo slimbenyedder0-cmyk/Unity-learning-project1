@@ -2,17 +2,25 @@ using UnityEngine;
 
 public class Skybox : MonoBehaviour
 {
+    public float sphereScale = 500f;
     void Start()
     {
         Debug.Log("[Skybox] Start() appelé");
+        // avant de créer la sphère
+        Vector3 originalPos = transform.position;
+        Debug.Log("[Skybox] Position originale : " + originalPos);
+
+        // Réinitialisation de la position
+        transform.position = Vector3.zero;
 
         // Création de la sphère
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         Debug.Log("[Skybox] Sphère créée");
-
-        sphere.transform.localScale = Vector3.one * 1000f;
+        sphere.transform.localScale = Vector3.one * sphereScale;
         sphere.transform.parent = transform;
-        Debug.Log("[Skybox] Sphère mise à l’échelle et parentée");
+        sphere.transform.localPosition = Vector3.zero;
+        sphere.transform.rotation = Quaternion.identity; // Fixe la rotation
+        Debug.Log("[Skybox] Sphère mise, à l’échelle, parentée et centrée");
 
         // Suppression du collider
         Collider col = sphere.GetComponent<Collider>();
@@ -38,11 +46,21 @@ public class Skybox : MonoBehaviour
         print("[Skybox] Mesh récupéré, normales = " + mesh.normals.Length);
 
         // Inversion des normales
-        Vector3[] invertedNormals = mesh.normals;
-        for (int i = 0; i < invertedNormals.Length; i++)
-            invertedNormals[i] = -invertedNormals[i];
+        // Inversion des normales
+        Vector3[] normals = mesh.normals;
+        for (int i = 0; i < normals.Length; i++)
+            normals[i] = -normals[i];
+        mesh.normals = normals;
 
-        mesh.normals = invertedNormals;
+        // Inversion des triangles pour que le culling fonctionne
+        int[] triangles = mesh.triangles;
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            int temp = triangles[i];
+            triangles[i] = triangles[i + 1];
+            triangles[i + 1] = temp;
+        }
+        mesh.triangles = triangles;
         Debug.Log("[Skybox] Normales inversées");
 
         // Renderer et shader
@@ -68,6 +86,9 @@ public class Skybox : MonoBehaviour
         Debug.Log("[Skybox] Matériau créé et assigné");
 
         print("[Skybox] Initialisation terminée avec succès");
+
+        // Debug log vérification faites comme un psycopathe to be continued dans un autre GO. 
+
     }
 
     void Update()
