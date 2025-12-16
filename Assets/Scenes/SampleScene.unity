@@ -3866,6 +3866,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5688506423619051881, guid: 553f034138e9c1b49901c1d604376769, type: 3}
+      propertyPath: m_Mass
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8682871760662469471, guid: 553f034138e9c1b49901c1d604376769, type: 3}
       propertyPath: m_Name
       value: Le Cube
