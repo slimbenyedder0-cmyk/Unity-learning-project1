@@ -303,6 +303,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1929248452}
+  - {fileID: 612409323}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 117.131, y: -90, z: -180}
 --- !u!114 &330585547
@@ -1003,6 +1004,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1206348035330568455, guid: 3503bfdcb3169d64d9de62d91d8258e1, type: 3}
   m_PrefabInstance: {fileID: 1452550625}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &612409321
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 612409323}
+  - component: {fileID: 612409322}
+  m_Layer: 0
+  m_Name: ProceduralSky
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &612409322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 612409321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4696b05ccae5f444b285d6170307b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sphereScale: 1000
+--- !u!4 &612409323
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 612409321}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.3687752, y: -0.60332817, z: 0.3687752, w: 0.60332817}
+  m_LocalPosition: {x: -0.18, y: -7.1989555, z: 29.7506}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 330585546}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &644219080
 GameObject:
   m_ObjectHideFlags: 0
