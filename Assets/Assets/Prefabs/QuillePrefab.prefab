@@ -121,7 +121,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2611483019866095747}
   serializedVersion: 4
-  m_Mass: 0.1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -152,7 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7bac8b501868a147a5f658165f7aec2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 0}
+  hasFallen: 0
+  cylinderRotation: {x: 0, y: 0, z: 0, w: 0}
+  startRotation: {x: 0, y: 0, z: 0}
+  cube: {fileID: 0}
+  Originalmaterial: {fileID: 0}
 --- !u!1 &5631895896676851647
 GameObject:
   m_ObjectHideFlags: 0
