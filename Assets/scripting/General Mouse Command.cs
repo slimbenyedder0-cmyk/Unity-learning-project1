@@ -6,6 +6,8 @@ public class General_Mouse_Command : MonoBehaviour
     public Vector2 mouseDelta;
     public bool commandSystemEnabler;
     public InputActionReference lookAction;
+    public CatapultController LaCatapult; 
+    
     public void OnEnable ()
     {
         lookAction.action.Enable();
@@ -32,7 +34,7 @@ public class General_Mouse_Command : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        LaCatapult.ReceiveLookInput(mouseDelta);
     }
 }
 

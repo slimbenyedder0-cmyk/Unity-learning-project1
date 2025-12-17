@@ -265,7 +265,7 @@ Transform:
   m_GameObject: {fileID: 5731199948920166430}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5136924, y: -0.48592192, z: -0.5136924, w: 0.485922}
-  m_LocalPosition: {x: 0.020508746, y: 0.01735076, z: 0}
+  m_LocalPosition: {x: 0.020508608, y: 0.017353158, z: 0}
   m_LocalScale: {x: 20, y: 20, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -466,6 +466,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e12a97fe9507b140955a8a7a85d5e2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseYaw: {fileID: 0}
+  barrelPitch: {fileID: 0}
+  sensitivity: 0.1
 --- !u!1 &9052524266394405568
 GameObject:
   m_ObjectHideFlags: 0
