@@ -16,21 +16,19 @@ public class CatapultController : MonoBehaviour
 
     public void ReceiveLookInput(Vector2 lookDelta)
     {
-        yaw += lookDelta.x * sensitivity * Time.deltaTime;
-        pitch -= lookDelta.y * sensitivity * Time.deltaTime;
+        yaw += lookDelta.x * sensitivity;
+        pitch -= lookDelta.y * sensitivity;
+        
+        baseYaw.localRotation = Quaternion.Euler(yaw, baseYaw.localRotation.y + 90f, pitch +90f);
 
-      //  pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
-        ApplyRotation();
     }
 
-    private void ApplyRotation()
-    {
-        baseYaw.localRotation = Quaternion.Euler(pitch, yaw, 0f);
-        barrelPitch.localRotation = Quaternion.Euler(pitch, 0f, 0f);
-    }
     private void Start()
     {
+        yaw = baseYaw.localRotation.x;
+        pitch = baseYaw.localRotation.z;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
