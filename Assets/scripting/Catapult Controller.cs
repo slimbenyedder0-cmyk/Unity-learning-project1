@@ -5,8 +5,12 @@ public class CatapultController : MonoBehaviour
     [Header("Parts")]
     [SerializeField] private Transform baseYaw;
     [SerializeField] private Transform barrelPitch;
+    public Transform GetBarrel()
+    {
+        return barrelPitch;
+    }
 
-    [Header("Rotation")]
+[Header("Rotation")]
     [SerializeField] private float sensitivity = 0.1f;
    // [SerializeField] private float minPitch = -10f;
    // [SerializeField] private float maxPitch = 45f;
