@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using NUnit.Framework;
 
 public class Quille : MonoBehaviour
 
@@ -10,6 +11,12 @@ public class Quille : MonoBehaviour
     public Vector3 startRotation;
     public GameObject cube;
     public Material Originalmaterial;
+    public FallState myCause = FallState.Null;
+    public enum FallState
+    {
+        Null, ByCube, ByQuille
+    }
+    public List collidedWith;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,9 +40,12 @@ public class Quille : MonoBehaviour
         if (collision.gameObject.name == "Le Cube")
         {
             StartCoroutine(Coroutineofcollision());
+            myCause = FallState.ByCube;
+            Debug.Log("Le Cube m'a renversée");
         }
     }
 
+   
     public void GetHit()
     {
         //
