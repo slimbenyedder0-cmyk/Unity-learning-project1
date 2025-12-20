@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class LoubiaBean : MonoBehaviour
 {
+    public BeanManager manager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8139846226140430280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3545665234343588408}
+  - component: {fileID: 8460682223578503677}
+  m_Layer: 0
+  m_Name: Le mrLoubia manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3545665234343588408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8139846226140430280}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 313, y: 192, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8460682223578503677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8139846226140430280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 143fbe08d600e954c89de128bc21d55e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnloubia: 5
+  spawnkhobz: 5
+  loubiaprefab: {fileID: 1158271819742982765, guid: 787b781f90cd7684cab8b280fd2c76b7, type: 3}
+  khobzprefab: {fileID: 1181828226912455414, guid: 62aea0f87c7413948b9852caae340e52, type: 3}
+  s7anloubia: {fileID: 0}
+  s7ankhobz: {fileID: 0}
+  loubialist: []
+  khobzlist: []
+  ratioPain: 1
+  ratioLoubia: 2

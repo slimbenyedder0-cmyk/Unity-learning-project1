@@ -201,7 +201,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 10508619}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1852490425}
+        m_TargetAssemblyTypeName: BeanManager, Assembly-CSharp
+        m_MethodName: SummonKhobz
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &10508619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,7 +288,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 150, y: 150}
+  m_AnchoredPosition: {x: 140, y: 80}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &155386760
@@ -824,7 +836,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1084181276}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1852490425}
+        m_TargetAssemblyTypeName: BeanManager, Assembly-CSharp
+        m_MethodName: Summonloubia
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1084181276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -876,7 +900,7 @@ GameObject:
   - component: {fileID: 1236057803}
   - component: {fileID: 1236057802}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: Manger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -945,7 +969,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1236057803}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1852490425}
+        m_TargetAssemblyTypeName: BeanManager, Assembly-CSharp
+        m_MethodName: Manger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1236057803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1571,58 +1607,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1818882722}
   m_CullTransparentMesh: 1
---- !u!1 &1852490424
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1852490426}
-  - component: {fileID: 1852490425}
-  m_Layer: 0
-  m_Name: Le mrLoubia manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1852490425
+--- !u!114 &1852490425 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 8460682223578503677, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+  m_PrefabInstance: {fileID: 4939568829487260507}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1852490424}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 143fbe08d600e954c89de128bc21d55e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnloubia: 5
-  spawnkhobz: 5
-  loubiaprefab: {fileID: 1158271819742982765, guid: 787b781f90cd7684cab8b280fd2c76b7, type: 3}
-  khobzprefab: {fileID: 1181828226912455414, guid: 62aea0f87c7413948b9852caae340e52, type: 3}
-  s7anloubia: {fileID: 707792596}
-  s7ankhobz: {fileID: 155386759}
-  loubialist: []
-  khobzlist: []
---- !u!4 &1852490426
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1852490424}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 313, y: 192, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &2114170882 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 874265658669699561, guid: 787b781f90cd7684cab8b280fd2c76b7, type: 3}
@@ -1830,6 +1825,71 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 787b781f90cd7684cab8b280fd2c76b7, type: 3}
+--- !u!1001 &4939568829487260507
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 313
+      objectReference: {fileID: 0}
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 192
+      objectReference: {fileID: 0}
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3545665234343588408, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8139846226140430280, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: m_Name
+      value: Le mrLoubia manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8460682223578503677, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: s7ankhobz
+      value: 
+      objectReference: {fileID: 155386759}
+    - target: {fileID: 8460682223578503677, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
+      propertyPath: s7anloubia
+      value: 
+      objectReference: {fileID: 707792596}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d8e48e6eef42bbc40a53f8952888586f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1838,4 +1898,4 @@ SceneRoots:
   - {fileID: 1697881069}
   - {fileID: 1380508906}
   - {fileID: 180327923}
-  - {fileID: 1852490426}
+  - {fileID: 4939568829487260507}
