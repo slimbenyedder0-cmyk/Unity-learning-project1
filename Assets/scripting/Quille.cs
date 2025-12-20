@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using NUnit.Framework;
 
+
 public class Quille : MonoBehaviour
 
 {
@@ -41,9 +42,16 @@ public class Quille : MonoBehaviour
         {
             StartCoroutine(Coroutineofcollision());
             myCause = FallState.ByCube;
-            Debug.Log("Le Cube m'a renversée");
+            Debug.Log("Le Cube m'a renversï¿½e");
+           
         }
+        else
+            {
+                myCause = FallState.ByQuille;
+                Debug.Log("Une quille m'a renversÃ©e");
+            }
     }
+
 
    
     public void GetHit()
@@ -75,8 +83,11 @@ public class Quille : MonoBehaviour
         
 
 
-    }    
+    }
 
-    
+    private string GetDebuggerDisplay()
+    {
+        return ToString();
+    }
 }
 
