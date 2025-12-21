@@ -159,6 +159,7 @@ MonoBehaviour:
   Originalmaterial: {fileID: 0}
   rougir: 0
   QuilleChargee: {fileID: 2100000, guid: a62a9660758c7ba49810ac51d6019fe1, type: 2}
+  Touchage: {fileID: 2100000, guid: 0e6b28eb332e2324c97be5523f885441, type: 2}
   noircir: 0
   myCause: 0
 --- !u!1 &5631895896676851647

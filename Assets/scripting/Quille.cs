@@ -14,6 +14,7 @@ public class Quille : MonoBehaviour
     public Material Originalmaterial;
     public bool rougir;
     public Material QuilleChargee;
+    public Material Touchage;
     public bool noircir;
     public FallState myCause = FallState.Null;
     public enum FallState
@@ -76,7 +77,7 @@ public class Quille : MonoBehaviour
         yield return null;
 
             Debug.Log("oui oui");
-            this.GetComponent<MeshRenderer>().material = cube.GetComponent<Renderer>().material;
+            this.GetComponent<MeshRenderer>().material = Touchage;
             yield return new WaitForSeconds(2.0f);
             this.GetComponent<MeshRenderer>().material = Originalmaterial;
        
