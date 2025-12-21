@@ -157,6 +157,10 @@ MonoBehaviour:
   startRotation: {x: 0, y: 0, z: 0}
   cube: {fileID: 0}
   Originalmaterial: {fileID: 0}
+  rougir: 0
+  QuilleChargee: {fileID: 2100000, guid: a62a9660758c7ba49810ac51d6019fe1, type: 2}
+  noircir: 0
+  myCause: 0
 --- !u!1 &5631895896676851647
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,9 @@ public class Quille : MonoBehaviour
     public Vector3 startRotation;
     public GameObject cube;
     public Material Originalmaterial;
+    public bool rougir;
+    public Material QuilleChargee;
+    public bool noircir;
     public FallState myCause = FallState.Null;
     public enum FallState
     {
@@ -38,18 +41,28 @@ public class Quille : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == "Le Cube")
+        if (rougir == false && noircir == false)
         {
-            StartCoroutine(Coroutineofcollision());
-            myCause = FallState.ByCube;
-            Debug.Log("Le Cube m'a renvers�e");
-           
-        }
-        else
+            if (collision.gameObject.name == "Le Cube")
             {
-                myCause = FallState.ByQuille;
-                Debug.Log("Une quille m'a renversée");
+                StartCoroutine(Coroutineofcollision());
+                myCause = FallState.ByCube;
+                Debug.Log("Le Cube m'a renvers�e");
+
             }
+            else if (collision.gameObject.GetComponent<MeshFilter>().sharedMesh == this.GetComponent<MeshFilter>().sharedMesh && collision.gameObject != this.gameObject)
+            {
+                StartCoroutine(CoroutineofcollisionQuilletoQuille());
+                myCause = FallState.ByQuille;
+            }
+            // cette partie ne marche pas car les quilles sont constemment en collision avec le sol (sinon elles plongeraient dans le vide), d'autre part sans check, ça se déclenche
+            // en continu
+            //   else
+            //     {
+            //       myCause = FallState.ByQuille;
+            //     Debug.Log("Une quille m'a renversée");
+            //}
+        }
     }
 
 
@@ -68,6 +81,20 @@ public class Quille : MonoBehaviour
             this.GetComponent<MeshRenderer>().material = Originalmaterial;
        
     }
+
+    public IEnumerator CoroutineofcollisionQuilletoQuille()
+    {
+        yield return null;
+
+        rougir = true;
+        noircir = true;
+        {
+            this.GetComponent<MeshRenderer>().material = QuilleChargee;
+            yield return new WaitForSeconds(2.0f);
+            this.GetComponent<MeshRenderer>().material = Originalmaterial;
+        }
+    }
+
     public IEnumerator CheckRotationcoroutine()
     {
         yield return new WaitForSeconds(0.25f);
