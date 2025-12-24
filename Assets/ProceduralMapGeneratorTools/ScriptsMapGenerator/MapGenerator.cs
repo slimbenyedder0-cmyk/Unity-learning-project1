@@ -1,27 +1,27 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    public int mapWidth = 256; // Must be greater than 0
-    public int mapHeight = 256; // Must be greater than 0
-    public float noiseScale = 20f; // Must be greater than 0
-    public bool autoupdate;    // Auto update map on parameter change in editor
-    public int octaves = 4; // Must be greater than or equal to 0
-    [Range(0,1)]
-    public float persistence = 0.5f;    // Must be between 0 and 1
-    public float lacunarity = 2f; // Must be greater than or equal to 1
-    public int seed;    // Seed for random number generator
-    public Vector2 offset; // Offset for noise map generation
+    public int mapWidth = 256;
+    public int mapHeight = 256;
+    public float noiseScale = 20f;
+    public bool autoupdate;
+    public int octaves = 4;
+    [Range(0, 1)]
+    public float persistence = 0.5f;
+    public float lacunarity = 2f;
+    public int seed;
+    public Vector2 offset;
+    public TerrainType[] regions;
 
-    // Generates the noise map and displays it using the MapDisplay component
     public void GenerateMap()
     {
-        float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight,seed, noiseScale, octaves, persistence, lacunarity, offset);
-
+        float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistence, lacunarity, offset);
         MapDisplay display = Object.FindFirstObjectByType<MapDisplay>();
         display.DrawNoiseMap(noiseMap);
     }
-    // Ensures that parameters have valid values
+
     public void OnValidate()
     {
         if (mapWidth < 1)
@@ -41,15 +41,12 @@ public class MapGenerator : MonoBehaviour
             octaves = 0;
         }
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    [System.Serializable]
+    public struct TerrainType
     {
-        
+        public string name;
+        public float height;
+        public Color color;
     }
 }

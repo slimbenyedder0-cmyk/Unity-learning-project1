@@ -166,13 +166,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapWidth: 100
   mapHeight: 100
-  noiseScale: 0.3
+  noiseScale: 0.5
   autoupdate: 1
   octaves: 4
-  persistence: 0.345
-  lacunarity: 2
-  seed: 12
+  persistence: 0.282
+  lacunarity: 3
+  seed: 24
   offset: {x: 0, y: 0}
+  regions: []
 --- !u!114 &10536522
 MonoBehaviour:
   m_ObjectHideFlags: 0
