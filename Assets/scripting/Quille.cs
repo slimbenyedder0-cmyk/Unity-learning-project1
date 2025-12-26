@@ -76,6 +76,8 @@ public class Quille : MonoBehaviour
     {
         yield return null;
 
+            rougir = true;
+            noircir = true;
             Debug.Log("oui oui");
             this.GetComponent<MeshRenderer>().material = Touchage;
             yield return new WaitForSeconds(2.0f);
