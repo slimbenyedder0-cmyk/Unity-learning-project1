@@ -23,7 +23,7 @@ public class ClickManager : MonoBehaviour
     
         var mr = referenceObject.GetComponent<MeshRenderer>();
         var mats = mr.materials;
-        mats[0] = referenceObject.GetComponent<CubeScript>().material1;   // drag your material into "secondMaterial" in Inspector
+        //mats[0] = referenceObject.GetComponent<CubeScript>().material1;   // drag your material into "secondMaterial" in Inspector
         mr.materials = mats;
     }
 

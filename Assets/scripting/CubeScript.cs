@@ -10,7 +10,7 @@ public class CubeScript : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(this.GetComponent<MeshRenderer>().material.color);
+
     }
     void Update()
     {
@@ -21,7 +21,6 @@ public class CubeScript : MonoBehaviour
     {
         yield return null;
         this.GetComponent<MeshRenderer>().material.color = buff;
-        Debug.Log(this.GetComponent<MeshRenderer>().material.color);
         Destroy(jumpbuffer.GetComponent<BoxCollider>());
         for (var i = jumpbuffer.transform.childCount - 1; i >= 0; i--)
         {
