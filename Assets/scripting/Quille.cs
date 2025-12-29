@@ -11,10 +11,14 @@ public class Quille : MonoBehaviour
     public Quaternion cylinderRotation;
     public Vector3 startRotation;
     public GameObject cube;
+    public GameObject spiralemouvante;
+    public GameObject spiralefixe;
     public Material Originalmaterial;
     public bool rougir;
     public Material QuilleChargee;
     public Material Touchage;
+    public Vector3 spiralefixeposition;
+    public GameObject particulespirale;
     public bool noircir;
     public FallState myCause = FallState.Null;
     public enum FallState
@@ -26,6 +30,18 @@ public class Quille : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        for (var i = this.transform.childCount - 1; i >= 0; i--)
+        {
+            if (this.transform.GetChild(i).GetComponent<ParticleSystem>() != null && particulespirale == null)
+            {
+                particulespirale = (this.transform.GetChild(i).gameObject);
+            }
+           else if (this.transform.GetChild(i).GetComponent<SpriteRenderer>() != null && spiralefixe == null)
+            {
+                spiralefixe = (this.transform.GetChild(i).gameObject);
+                spiralefixeposition = spiralefixe.transform.position;
+            }
+        }
         cylinderRotation = transform.rotation;
         startRotation = new Vector3 (this.transform.rotation.x,this.transform.rotation.y,this.transform.rotation.z);
         GetHit();
@@ -78,6 +94,10 @@ public class Quille : MonoBehaviour
 
             rougir = true;
             noircir = true;
+            GameObject tmp = Instantiate(spiralemouvante, spiralefixeposition, Quaternion.identity);
+            //spiralefixe.GetComponent<SpriteRenderer>().enabled = false;
+            Destroy(particulespirale);
+            Destroy(spiralefixe);
             Debug.Log("oui oui");
             this.GetComponent<MeshRenderer>().material = Touchage;
             yield return new WaitForSeconds(2.0f);
@@ -93,6 +113,18 @@ public class Quille : MonoBehaviour
         noircir = true;
         {
             this.GetComponent<MeshRenderer>().material = QuilleChargee;
+            GameObject tmp = Instantiate(spiralemouvante, spiralefixeposition, Quaternion.identity);
+            for (var i = this.transform.childCount - 1; i >= 0; i--)
+            {
+                if (this.transform.GetChild(i).GetComponent<SpriteRenderer>() != null)
+                {
+                    tmp.transform.localScale *= 2f;
+                    break;
+                }
+            }
+            //spiralefixe.GetComponent<SpriteRenderer>().enabled = false;
+            Destroy(particulespirale);
+            Destroy(spiralefixe);
             yield return new WaitForSeconds(2.0f);
             this.GetComponent<MeshRenderer>().material = Originalmaterial;
         }

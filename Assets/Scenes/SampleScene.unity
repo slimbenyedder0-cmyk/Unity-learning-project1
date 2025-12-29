@@ -9691,6 +9691,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: QuillePrefab (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 6238255670088403888, guid: 3503bfdcb3169d64d9de62d91d8258e1, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
