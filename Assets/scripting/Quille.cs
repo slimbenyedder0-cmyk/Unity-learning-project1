@@ -19,6 +19,8 @@ public class Quille : MonoBehaviour
     public Material Touchage;
     public Vector3 spiralefixeposition;
     public GameObject particulespirale;
+    public GameObject particulescharg;
+    public GameObject particulesactiv;
     public bool noircir;
     public FallState myCause = FallState.Null;
     public enum FallState
@@ -95,8 +97,10 @@ public class Quille : MonoBehaviour
             rougir = true;
             noircir = true;
             GameObject tmp = Instantiate(spiralemouvante, spiralefixeposition, Quaternion.identity);
-            //spiralefixe.GetComponent<SpriteRenderer>().enabled = false;
-            Destroy(particulespirale);
+            GameObject effectemp = Instantiate(particulesactiv, spiralefixeposition, Quaternion.identity);
+            effectemp.transform.parent = this.transform;
+        //spiralefixe.GetComponent<SpriteRenderer>().enabled = false;
+        Destroy(particulespirale);
             Destroy(spiralefixe);
             Debug.Log("oui oui");
             this.GetComponent<MeshRenderer>().material = Touchage;
@@ -114,6 +118,8 @@ public class Quille : MonoBehaviour
         {
             this.GetComponent<MeshRenderer>().material = QuilleChargee;
             GameObject tmp = Instantiate(spiralemouvante, spiralefixeposition, Quaternion.identity);
+            GameObject effectmp = Instantiate(particulescharg, spiralefixeposition, Quaternion.identity);
+            effectmp.transform.parent = this.transform;
             for (var i = this.transform.childCount - 1; i >= 0; i--)
             {
                 if (this.transform.GetChild(i).GetComponent<SpriteRenderer>() != null)
