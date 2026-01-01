@@ -21,6 +21,7 @@ public class CubeScript : MonoBehaviour
     {
         yield return null;
         this.GetComponent<MeshRenderer>().material.color = buff;
+        this.GetComponent<Rigidbody>().linearVelocity = this.GetComponent<Rigidbody>().linearVelocity  += new Vector3(0, 10, 0); //* -2;
         Destroy(jumpbuffer.GetComponent<BoxCollider>());
         for (var i = jumpbuffer.transform.childCount - 1; i >= 0; i--)
         {

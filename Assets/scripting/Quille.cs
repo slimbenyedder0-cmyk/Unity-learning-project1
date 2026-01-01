@@ -68,7 +68,6 @@ public class Quille : MonoBehaviour
             {
                 StartCoroutine(Coroutineofcollision());
                 myCause = FallState.ByCube;
-                Debug.Log("Le Cube m'a renvers�e");
 
             }
             else if (collision.gameObject.GetComponent<MeshFilter>().sharedMesh == this.GetComponent<MeshFilter>().sharedMesh && collision.gameObject != this.gameObject)
@@ -104,7 +103,6 @@ public class Quille : MonoBehaviour
         //spiralefixe.GetComponent<SpriteRenderer>().enabled = false;
         Destroy(particulespirale);
             Destroy(spiralefixe);
-            Debug.Log("oui oui");
             this.GetComponent<MeshRenderer>().material = Touchage;
             yield return new WaitForSeconds(2.0f);
             this.GetComponent<MeshRenderer>().material = Originalmaterial;

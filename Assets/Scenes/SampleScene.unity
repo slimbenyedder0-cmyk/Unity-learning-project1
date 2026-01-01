@@ -4284,7 +4284,7 @@ SphereCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.5
@@ -4354,7 +4354,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eecd24c184e159b479451ee9a76fbccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Ofinterest: {fileID: 0}
+  Touche: 0
+  Ofinterestlist: []
+  Ofinterestprocess: {fileID: 0}
 --- !u!1 &695274135
 GameObject:
   m_ObjectHideFlags: 0
