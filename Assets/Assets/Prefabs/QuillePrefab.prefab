@@ -5003,6 +5003,7 @@ MonoBehaviour:
   particulesactiv: {fileID: 5214862468702542733, guid: 812e9cbe9fa375e439e4b0abd38a2063, type: 3}
   noircir: 0
   myCause: 0
+  particuleposition: {x: 0, y: 0, z: 0}
 --- !u!1 &5631895896676851647
 GameObject:
   m_ObjectHideFlags: 0
