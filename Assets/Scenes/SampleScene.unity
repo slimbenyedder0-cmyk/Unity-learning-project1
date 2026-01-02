@@ -2295,7 +2295,7 @@ GameObject:
   - component: {fileID: 429073416}
   - component: {fileID: 429073415}
   - component: {fileID: 429073414}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2852,7 +2852,7 @@ GameObject:
   - component: {fileID: 497678764}
   - component: {fileID: 497678763}
   - component: {fileID: 497678762}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: t (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3262,7 +3262,7 @@ GameObject:
   - component: {fileID: 594439635}
   - component: {fileID: 594439634}
   - component: {fileID: 594439633}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: r (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3809,7 +3809,7 @@ GameObject:
   - component: {fileID: 658066176}
   - component: {fileID: 658066175}
   - component: {fileID: 658066179}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: t
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4047,7 +4047,7 @@ GameObject:
   - component: {fileID: 669333698}
   - component: {fileID: 669333697}
   - component: {fileID: 669333696}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: r (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4286,7 +4286,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 1
@@ -5021,7 +5021,7 @@ GameObject:
   - component: {fileID: 849326043}
   - component: {fileID: 849326042}
   - component: {fileID: 849326041}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: t (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5214,7 +5214,7 @@ GameObject:
   - component: {fileID: 874635375}
   - component: {fileID: 874635374}
   - component: {fileID: 874635373}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: r (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5442,7 +5442,7 @@ GameObject:
   - component: {fileID: 882302351}
   - component: {fileID: 882302350}
   - component: {fileID: 882302354}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6819,7 +6819,7 @@ GameObject:
   - component: {fileID: 1141332317}
   - component: {fileID: 1141332316}
   - component: {fileID: 1141332315}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: r (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9225,7 +9225,7 @@ GameObject:
   - component: {fileID: 1658552220}
   - component: {fileID: 1658552219}
   - component: {fileID: 1658552218}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: t (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11038,7 +11038,7 @@ GameObject:
   - component: {fileID: 2018976495}
   - component: {fileID: 2018976494}
   - component: {fileID: 2018976493}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DeadZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12444,8 +12444,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6318304751852934079}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.04231183, y: 0.07480001, z: 0.05772101, w: 0.9946271}
-  m_LocalPosition: {x: -89.620125, y: -11.3568, z: 1.7957933}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -92.261, y: -11.99, z: 0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -10,13 +10,13 @@ public class Scr : MonoBehaviour
     public GameObject SearchRadius;
     public GameObject Lescore;
     public bool detruit;
+    public bool aspiration;
+    public Vector3 Trajectory;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log("une spirale est apparue");
         Lescore = GameObject.Find("ScoreText");
-        Debug.Log(GameObject.Find("ScoreText"));
         valeur = 0;
         for (var i = GameObject.Find("Le Cube").transform.childCount - 1; i >= 0; i--)
         {
@@ -24,7 +24,6 @@ public class Scr : MonoBehaviour
             {
                 SearchRadius = GameObject.Find("Le Cube").transform.GetChild(i).gameObject;
                 SearchRadius.GetComponent<SearchProcess>().Ofinterestlist.Add(this.gameObject);
-                Debug.Log("une spirale est apparue");
                 break;
             }
             //SearchRadius = GameObject.Find("CubeSearchRadius");
@@ -41,28 +40,26 @@ public class Scr : MonoBehaviour
             StartCoroutine(Destruction());
             detruit = true;
         }
-        if (ismoving == true)
+        if (ismoving == true && aspiration == false)
         {
             StartCoroutine(Coroutineofaspiration());
         }
     }
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.GetComponent<Quille>() != null)
+        if (collision.gameObject.GetComponent<Quille>() != null && ismoving == true)
         {
-            this.GetComponent<Rigidbody>().linearVelocity = this.GetComponent<Rigidbody>().linearVelocity += new Vector3(0, 5, 0);
+            Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
         }
         if (collision.gameObject == GameObject.Find("Le Cube") && pointobtenu == false)
         {
             if (transform.localScale != Vector3.one)
             {
                 valeur = 2;
-                Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale = Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale + valeur;
             }
             else
             {
                 valeur = 1;
-                Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale = Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale + valeur;
             }
                 pointobtenu = true;
         }
@@ -71,18 +68,21 @@ public class Scr : MonoBehaviour
     { 
         yield return null;
         SearchRadius.GetComponent<SearchProcess>().Ofinterestlist.Remove(this.gameObject);
-        Debug.Log("destruction terminée");
+        Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale = Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale + valeur;
         yield return new WaitForSeconds(0.1f);
         Destroy(this.gameObject);
     }
     public IEnumerator Coroutineofaspiration()
     {
         yield return null;
-        yield return new WaitForSeconds(1f);
-        
+        aspiration = true;
+        yield return new WaitForSeconds(0.25f);
+        aspiration = false;
             if (Vector3.Distance(transform.position, cubejoueur.transform.position) > 0.1f && Vector3.Distance(transform.position, cubejoueur.transform.position) < 5f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, cubejoueur.transform.position, 0.1f);
-            }
+                Trajectory = cubejoueur.transform.position - transform.position;
+                this.GetComponent<Rigidbody>().linearVelocity = Trajectory.normalized * 2;
+                //transform.position = Vector3.MoveTowards(transform.position, cubejoueur.transform.position, 0.1f * 0.25f);
+        }
     }
 }
