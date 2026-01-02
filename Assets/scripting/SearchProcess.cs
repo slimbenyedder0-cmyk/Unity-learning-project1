@@ -18,12 +18,15 @@ public class SearchProcess : MonoBehaviour
         {
             for (int i = Ofinterestlist.Count - 1; i >= 0; i--)
             {
+                var Ofinterest = Ofinterestlist[i];
+                if (Ofinterest == other.gameObject && Ofinterest.GetComponent<Scr>().ismoving == false)
+                {
                     Debug.Log("aspiration de sprite");
-                    var Ofinterest = Ofinterestlist[i];
-                    Ofinterestprocess = Ofinterest.GetComponent<Scr>();
                     Ofinterest.GetComponent<Scr>().ismoving = true;
-                    Ofinterestprocess.cubejoueur = this.transform.parent.gameObject;
+                    Ofinterest.GetComponent<Scr>().cubejoueur = this.transform.parent.gameObject;
                     //StartCoroutine(Ofinterestprocess.Coroutineofaspiration());
+                    break;
+                }
             }
         }
     }

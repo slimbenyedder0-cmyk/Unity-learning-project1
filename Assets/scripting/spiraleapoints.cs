@@ -4,15 +4,17 @@ using System.Collections;
 public class Scr : MonoBehaviour
 {
     public GameObject cubejoueur;
-    public bool point;
+    public bool pointobtenu;
     public bool ismoving;
     public float valeur;
     public GameObject SearchRadius;
     public GameObject Lescore;
+    public bool detruit;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Debug.Log("une spirale est apparue");
         Lescore = GameObject.Find("ScoreText");
         Debug.Log(GameObject.Find("ScoreText"));
         valeur = 0;
@@ -22,8 +24,11 @@ public class Scr : MonoBehaviour
             {
                 SearchRadius = GameObject.Find("Le Cube").transform.GetChild(i).gameObject;
                 SearchRadius.GetComponent<SearchProcess>().Ofinterestlist.Add(this.gameObject);
+                Debug.Log("une spirale est apparue");
                 break;
             }
+            //SearchRadius = GameObject.Find("CubeSearchRadius");
+            //SearchRadius.GetComponent<SearchProcess>().Ofinterestlist.Add(this.gameObject);
         }
     }
 
@@ -31,9 +36,10 @@ public class Scr : MonoBehaviour
     void Update()
     {
 
-        if (point == true)
+        if (pointobtenu == true && detruit == false)
         {
             StartCoroutine(Destruction());
+            detruit = true;
         }
         if (ismoving == true)
         {
@@ -42,7 +48,11 @@ public class Scr : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject == GameObject.Find("Le Cube") && valeur == 0)
+        if (collision.gameObject.GetComponent<Quille>() != null)
+        {
+            this.GetComponent<Rigidbody>().linearVelocity = this.GetComponent<Rigidbody>().linearVelocity += new Vector3(0, 5, 0);
+        }
+        if (collision.gameObject == GameObject.Find("Le Cube") && pointobtenu == false)
         {
             if (transform.localScale != Vector3.one)
             {
@@ -54,7 +64,7 @@ public class Scr : MonoBehaviour
                 valeur = 1;
                 Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale = Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale + valeur;
             }
-                point = true;
+                pointobtenu = true;
         }
     }
     public IEnumerator Destruction()

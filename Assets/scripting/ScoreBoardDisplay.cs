@@ -17,7 +17,6 @@ public class ScoreBoardDisplay : MonoBehaviour
     {
         if (lastvaleur != valeurtotale)
         {
-            Debug.Log(valeurtotale);
             this.GetComponent<TMP_Text>().text = "Score: " + valeurtotale.ToString();
             lastvaleur = valeurtotale;
         }
