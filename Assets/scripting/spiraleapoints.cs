@@ -8,10 +8,13 @@ public class Scr : MonoBehaviour
     public bool ismoving;
     public float valeur;
     public GameObject SearchRadius;
+    public GameObject Lescore;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Lescore = GameObject.Find("ScoreText");
+        Debug.Log(GameObject.Find("ScoreText"));
         valeur = 0;
         for (var i = GameObject.Find("Le Cube").transform.childCount - 1; i >= 0; i--)
         {
@@ -44,13 +47,14 @@ public class Scr : MonoBehaviour
             if (transform.localScale != Vector3.one)
             {
                 valeur = 2;
+                Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale = Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale + valeur;
             }
             else
             {
                 valeur = 1;
+                Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale = Lescore.GetComponent<ScoreBoardDisplay>().valeurtotale + valeur;
             }
-            Debug.Log(valeur);
-            point = true;
+                point = true;
         }
     }
     public IEnumerator Destruction()
