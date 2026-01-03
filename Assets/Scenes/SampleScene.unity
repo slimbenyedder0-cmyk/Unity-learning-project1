@@ -3032,10 +3032,22 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 052cd89555c457f4aa584eba3c6862e9, type: 2}
+    - target: {fileID: -3268646637222576083, guid: a7136c1d99084c4479bdee4c21dc304a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 052cd89555c457f4aa584eba3c6862e9, type: 2}
     - target: {fileID: 919132149155446097, guid: a7136c1d99084c4479bdee4c21dc304a, type: 3}
       propertyPath: m_Name
       value: lacatapilte2
       objectReference: {fileID: 0}
+    - target: {fileID: 1198890884312856187, guid: a7136c1d99084c4479bdee4c21dc304a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 052cd89555c457f4aa584eba3c6862e9, type: 2}
+    - target: {fileID: 8761921576749942315, guid: a7136c1d99084c4479bdee4c21dc304a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 052cd89555c457f4aa584eba3c6862e9, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
