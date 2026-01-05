@@ -1,10 +1,17 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class headsnakescript : MonoBehaviour
+public class HeadSnakeScript : MonoBehaviour
 {
-    public float speed = 5f;
     private Vector2 moveInput;
+
+    [SerializeField]
+    private float moveSpeed = 5f;
+
+    void Move(Vector2 direction)
+    {
+        transform.Translate(direction * moveSpeed * Time.deltaTime);
+    }
 
     public void ReceiveMoveInput(Vector2 input)
     {
@@ -13,8 +20,6 @@ public class headsnakescript : MonoBehaviour
 
     private void Update()
     {
-        Vector3 movement = new Vector3(moveInput.x, 0f, moveInput.y);
-        transform.Translate(movement * speed * Time.deltaTime, Space.World);
+        Move(moveInput);
     }
-
 }
