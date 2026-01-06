@@ -34,7 +34,7 @@ public class HeadSnakeScript : MonoBehaviour
         // Mode classique de Snake : ne pas autoriser les mouvements diagonaux
         if (currentMoveMode == MoveMode.Modern)
         {
-            if (input.sqrMagnitude > inputMagnitudeThreshold)
+            if (input.sqrMagnitude > inputMagnitudeThreshold) // Vérifier si l'input dépasse le seuil
             { lastDirection = input.normalized; }
         }
         //Mode moderne avec mouvements diagonaux autorisés
@@ -64,15 +64,29 @@ public class HeadSnakeScript : MonoBehaviour
         inputH = lastDirection.x;
         inputV = lastDirection.y;
     }
-    void Move(float inputH,float inputV)
+    void ClassicMove(float inputH,float inputV)
+    { // Déplacement classique : un axe à la fois mais ce qui est en dessous est temporaire, en attente de revoir avec Khlil pour le comportement exact et l'implémentation d'une grille si nécessaire.
+        if (inputH != 0)
+        {
+            this.transform.Translate(moveSpeed * Time.deltaTime * new Vector3(inputH, 0, 0));
+        }
+        else if (inputV != 0)
+        {
+            this.transform.Translate(moveSpeed * Time.deltaTime * new Vector3(0, 0, inputV));
+        }
+    }
+    void ModernMove(float inputH,float inputV)
     {
         this.transform.Translate(moveSpeed * Time.deltaTime * new Vector3(inputH, 0, inputV));
     }
     
     private void Update()
     {
-        Move(inputH,inputV);
+        if (currentMoveMode == MoveMode.Classic)
+            ClassicMove(inputH,inputV);
+        else
+            ModernMove(inputH,inputV);
         if (input != Vector2.zero)
-        { Debug.Log("Input H: " + inputH + " Input V: " + inputV); }
+        { Debug.Log("Input H: " + inputH + " Input V: " + inputV); } //Log uniquement si l'input n'est pas nul
     }
 }
