@@ -18,7 +18,7 @@ public class HeadSnakeScript : MonoBehaviour
     private float inputH;
     private float inputV;
     public GameObject bodysnake;
-    public GameObject spawnattach;
+    public GameObject spawnattache;
     private Vector3 spawnplace;
 
     private void Awake()
@@ -94,8 +94,10 @@ public class HeadSnakeScript : MonoBehaviour
     public IEnumerator Bodyspawn()
     {
         yield return null;
-        spawnplace = new Vector3(spawnattach.transform.position.x, spawnattach.transform.position.y - 2.1f, spawnattach.transform.position.z);
+        spawnattache = (gameObject.transform.Find("spawn attach").gameObject); //en vrai nique bien ta mère sale fils de pute arrête de foutre le prefab zebbi j'ai tout essayé ta race
+        print(spawnattache);
+        spawnplace = new Vector3(spawnattache.transform.position.x, spawnattache.transform.position.y - 2.1f, spawnattache.transform.position.z);
         GameObject tmp = Instantiate(bodysnake, spawnplace, Quaternion.identity);
-        tmp.GetComponent<snakebody>().spawnattach = spawnattach;
+        tmp.GetComponent<snakebody>().spawnattach = spawnattache;
     }
 }

@@ -183,6 +183,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7795160577650313631, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}
+      propertyPath: spawnattach
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 9142842332741686633, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}
       propertyPath: m_Name
       value: HeadSnakeCube
@@ -199,8 +203,7 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 517122390805581281, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 115318595501784683, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}

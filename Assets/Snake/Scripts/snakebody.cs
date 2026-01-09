@@ -15,8 +15,6 @@ public class snakebody : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(Vector3.Distance(transform.position, spawnattach.transform.position));
-        Debug.Log(spawnattach.transform.position);
         if (headfollow == false)
         {
             StartCoroutine(Headfollow());
@@ -32,7 +30,7 @@ public class snakebody : MonoBehaviour
         if (Vector3.Distance(transform.position, spawnattach.transform.position) > 0.01f)
         {
             Trajectory = spawnattach.transform.position - transform.position;
-            this.GetComponent<Rigidbody>().linearVelocity = Trajectory.normalized * 2;
+            this.GetComponent<Rigidbody>().linearVelocity = Trajectory.normalized * 12;
             //transform.position = Vector3.MoveTowards(transform.position, spawnattach.transform.position, 10f * Time.deltaTime);
         }
     }
