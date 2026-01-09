@@ -127,6 +127,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 141000493599985772, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 141000493599985772, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1111962205439627481, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -170,6 +178,10 @@ PrefabInstance:
     - target: {fileID: 6281563035348906840, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6553898586024819898, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9142842332741686633, guid: fe93567e536a3bf4f9c985faef02624b, type: 3}
       propertyPath: m_Name
@@ -831,6 +843,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8359949611780337642, guid: 87c9830b98003c14db1d5aa5c3776049, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -869,8 +885,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0

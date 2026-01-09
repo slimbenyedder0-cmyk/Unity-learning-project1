@@ -36,15 +36,11 @@ public class CoinScript : MonoBehaviour
     private void GetNewPosition()
     {
         float x = Random.Range(-20.0f, 20.0f);
-        float y = 0.5f;
+        float y = 2.6f;
         float z = Random.Range(-20.0f, 20.0f);
         newRandomPosition = new Vector3(x, y, z);
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+   
 
     // Update is called once per frame
     void Update()
