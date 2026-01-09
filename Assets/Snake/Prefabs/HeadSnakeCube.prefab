@@ -399,3 +399,5 @@ MonoBehaviour:
   currentMoveMode: 0
   moveSpeed: 5
   inputMagnitudeThreshold: 0.5
+  bodysnake: {fileID: 5164104667442823356, guid: 39bb754292aecce4f8fe76ac659a5e73, type: 3}
+  spawnattach: {fileID: 4482220593768240607}

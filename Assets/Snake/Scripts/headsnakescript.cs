@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
+using System.Collections;
 
 public class HeadSnakeScript : MonoBehaviour
 {
@@ -17,7 +17,9 @@ public class HeadSnakeScript : MonoBehaviour
     private Vector2 inputMagnitudeVector; // Vecteur pour stocker le seuil d'amplitude d'input
     private float inputH;
     private float inputV;
-    
+    public GameObject bodysnake;
+    public GameObject spawnattach;
+    private Vector3 spawnplace;
 
     private void Awake()
     {
@@ -88,5 +90,12 @@ public class HeadSnakeScript : MonoBehaviour
             ModernMove(inputH,inputV);
         if (input != Vector2.zero)
         { Debug.Log("Input H: " + inputH + " Input V: " + inputV); } //Log uniquement si l'input n'est pas nul
+    }
+    public IEnumerator Bodyspawn()
+    {
+        yield return null;
+        spawnplace = new Vector3(spawnattach.transform.position.x, spawnattach.transform.position.y - 2.1f, spawnattach.transform.position.z);
+        GameObject tmp = Instantiate(bodysnake, spawnplace, Quaternion.identity);
+        tmp.GetComponent<snakebody>().spawnattach = spawnattach;
     }
 }

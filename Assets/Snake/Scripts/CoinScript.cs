@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using UnityEngine;
+using System.Collections;
 
 public class CoinScript : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class CoinScript : MonoBehaviour
     private Vector3 newRandomPosition;
     private float radius;
     private LayerMask snake;
+    public GameObject snakehead;
     private void Awake()
     {
         radius = this.gameObject.GetComponent<SphereCollider>().radius;
@@ -20,6 +22,7 @@ public class CoinScript : MonoBehaviour
         if (((1 << other.gameObject.layer) & snake) != 0) // Vérifie si l'objet entrant appartient au layer "Snake"
         {
             SnakeScoreBoard.IncrementScore();
+            StartCoroutine(snakehead.GetComponent<HeadSnakeScript>().Bodyspawn());
             bool positionFound = false;
             while (!positionFound)
             {
