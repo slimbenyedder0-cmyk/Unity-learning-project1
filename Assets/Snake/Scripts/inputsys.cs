@@ -5,8 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private HeadSnakeScript HeadSnake; // Référence au script de la tête
-
-    private Vector3 moveInput;
+    private Vector2 jumpInput;
+    private Vector2 moveInput;
     public void Awake()
     {
         if (HeadSnake == null)
@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     // Appelé automatiquement par le composant PlayerInput
     public void OnMove(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector3>();
+        moveInput = context.ReadValue<Vector2>();
 
         // Transmettre l'input à la tête du serpent
         if (HeadSnake != null)
@@ -33,6 +33,17 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.LogWarning("HeadSnakeScript n'est pas assigné dans PlayerController.");
+        }
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        //jumpInput = context.ReadValue<Vector2>();
+        Debug.Log("ça saute pas");
+        if (HeadSnake != null && !context.performed)
+        {
+            HeadSnake.ReceiveJumpInput();
+            Debug.Log( "ça saute");
         }
     }
 }

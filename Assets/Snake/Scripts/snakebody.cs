@@ -25,7 +25,6 @@ public class snakebody : MonoBehaviour
         yield return null;
         headfollow = true;
         yield return new WaitForSeconds(0.6f);
-        print(Vector3.Distance(transform.position, spawnattach.transform.position));
         headfollow = false;
         if (Vector3.Distance(transform.position, spawnattach.transform.position) > 0.6f)
         {

@@ -6,6 +6,7 @@ public class HeadSnakeScript : MonoBehaviour
 {
     private enum MoveMode { Classic, Modern }
     private Vector2 moveInput;
+    private Vector2 jumpInput;
     private Vector2 lastDirection; // Dernière direction connue
     [SerializeField]
     private MoveMode currentMoveMode = MoveMode.Classic;
@@ -68,7 +69,11 @@ public class HeadSnakeScript : MonoBehaviour
         inputH = lastDirection.x;
         inputV = lastDirection.y;
     }
-    void ClassicMove(float inputH,float inputV, float inputY)
+    public void ReceiveJumpInput()
+    {
+        this.GetComponent<Rigidbody>().linearVelocity += new Vector3(0, 10, 0);
+    }
+    void ClassicMove(float inputH,float inputV)
     { // Déplacement classique : un axe à la fois mais ce qui est en dessous est temporaire, en attente de revoir avec Khlil pour le comportement exact et l'implémentation d'une grille si nécessaire.
         if (inputH != 0)
         {
@@ -78,21 +83,18 @@ public class HeadSnakeScript : MonoBehaviour
         {
             this.transform.Translate(moveSpeed * Time.deltaTime * new Vector3(0, 0, inputV));
         }
-        if (inputY != 0)
-        {
-            this.GetComponent<Rigidbody>().linearVelocity = this.GetComponent<Rigidbody>().linearVelocity += new Vector3(0, 10, 0);
-        }
+
     }
-    void ModernMove(float inputH,float inputV, float inputY)
+    void ModernMove(float inputH,float inputV)
     {
         this.transform.Translate(moveSpeed * Time.deltaTime * new Vector3(inputH, inputY, inputV));
     }
     private void Update()
     {
         if (currentMoveMode == MoveMode.Classic)
-            ClassicMove(inputH,inputV, inputY);
+            ClassicMove(inputH,inputV);
         else
-            ModernMove(inputH,inputV, inputY);
+            ModernMove(inputH,inputV);
         if (input != Vector3.zero)
         { Debug.Log("Input H: " + inputH + " Input V: " + inputV + inputY); } //Log uniquement si l'input n'est pas nul
     }
@@ -114,7 +116,6 @@ public class HeadSnakeScript : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(0.1f);
-        print(spawnattache);
         spawnplace = new Vector3(spawnattache.transform.position.x, spawnattache.transform.position.y, spawnattache.transform.position.z);
         tmp = Instantiate(bodysnake, spawnplace, Quaternion.identity);
         tmp.GetComponent<snakebody>().spawnattach = spawnattache;
