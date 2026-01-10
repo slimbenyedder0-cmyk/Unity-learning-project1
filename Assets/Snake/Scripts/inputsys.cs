@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private HeadSnakeScript HeadSnake; // Référence au script de la tête
 
-    private Vector2 moveInput;
+    private Vector3 moveInput;
     public void Awake()
     {
         if (HeadSnake == null)
@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     // Appelé automatiquement par le composant PlayerInput
     public void OnMove(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector2>();
+        moveInput = context.ReadValue<Vector3>();
 
         // Transmettre l'input à la tête du serpent
         if (HeadSnake != null)

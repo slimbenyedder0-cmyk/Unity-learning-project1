@@ -20,22 +20,22 @@ public class snakebody : MonoBehaviour
             StartCoroutine(Leadfollow());
         }
     }
-
     public IEnumerator Leadfollow()
     {
         yield return null;
         headfollow = true;
         yield return new WaitForSeconds(0.6f);
+        print(Vector3.Distance(transform.position, spawnattach.transform.position));
         headfollow = false;
-        if (Vector3.Distance(transform.position, spawnattach.transform.position) > 0.1f)
+        if (Vector3.Distance(transform.position, spawnattach.transform.position) > 0.6f)
         {
             Trajectory = spawnattach.transform.position - transform.position;
-            this.GetComponent<Rigidbody>().linearVelocity = Trajectory.normalized * 12;
+            this.GetComponent<Rigidbody>().linearVelocity = Trajectory.normalized * 6;
             //transform.position = Vector3.MoveTowards(transform.position, spawnattach.transform.position, 10f * Time.deltaTime);
         }
-        else
+        else if (Vector3.Distance(transform.position, spawnattach.transform.position) <= 0.6f)
         {
-            this.GetComponent<Rigidbody>().linearVelocity = Trajectory.normalized * 0;
+            this.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         }
     }
 }

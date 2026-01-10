@@ -13,13 +13,15 @@ public class HeadSnakeScript : MonoBehaviour
     private float moveSpeed = 5f;
     [SerializeField]
     private float inputMagnitudeThreshold = 0.5f;
-    private Vector2 input; // Variable pour stocker l'input actuel
+    private Vector3 input; // Variable pour stocker l'input actuel
     private Vector2 inputMagnitudeVector; // Vecteur pour stocker le seuil d'amplitude d'input
     private float inputH;
     private float inputV;
+    private float inputY;
     public GameObject bodysnake;
     public GameObject spawnattache;
     private Vector3 spawnplace;
+    private GameObject tmp;
 
     private void Awake()
     {
@@ -66,7 +68,7 @@ public class HeadSnakeScript : MonoBehaviour
         inputH = lastDirection.x;
         inputV = lastDirection.y;
     }
-    void ClassicMove(float inputH,float inputV)
+    void ClassicMove(float inputH,float inputV, float inputY)
     { // Déplacement classique : un axe à la fois mais ce qui est en dessous est temporaire, en attente de revoir avec Khlil pour le comportement exact et l'implémentation d'une grille si nécessaire.
         if (inputH != 0)
         {
@@ -76,28 +78,45 @@ public class HeadSnakeScript : MonoBehaviour
         {
             this.transform.Translate(moveSpeed * Time.deltaTime * new Vector3(0, 0, inputV));
         }
+        if (inputY != 0)
+        {
+            this.GetComponent<Rigidbody>().linearVelocity = this.GetComponent<Rigidbody>().linearVelocity += new Vector3(0, 10, 0);
+        }
     }
-    void ModernMove(float inputH,float inputV)
+    void ModernMove(float inputH,float inputV, float inputY)
     {
-        this.transform.Translate(moveSpeed * Time.deltaTime * new Vector3(inputH, 0, inputV));
+        this.transform.Translate(moveSpeed * Time.deltaTime * new Vector3(inputH, inputY, inputV));
     }
-    
     private void Update()
     {
         if (currentMoveMode == MoveMode.Classic)
-            ClassicMove(inputH,inputV);
+            ClassicMove(inputH,inputV, inputY);
         else
-            ModernMove(inputH,inputV);
-        if (input != Vector2.zero)
-        { Debug.Log("Input H: " + inputH + " Input V: " + inputV); } //Log uniquement si l'input n'est pas nul
+            ModernMove(inputH,inputV, inputY);
+        if (input != Vector3.zero)
+        { Debug.Log("Input H: " + inputH + " Input V: " + inputV + inputY); } //Log uniquement si l'input n'est pas nul
     }
     public IEnumerator Bodyspawn()
     {
         yield return null;
-        spawnattache = GameObject.Find("spawn attacha").gameObject; //en vrai nique bien ta mère sale fils de pute arrête de foutre le prefab zebbi j'ai tout essayé ta race
+        if (tmp == null)
+        {
+            spawnattache = GameObject.Find("spawn attacha").gameObject;
+        }
+        else
+        {
+            for (var i = tmp.transform.childCount - 1; i >= 0; i--)
+            {
+                if (tmp.transform.GetChild(i).GetComponent<tailattach>() != null)
+                {
+                    spawnattache = (tmp.transform.GetChild(i).gameObject);
+                }
+            }
+        }
+        yield return new WaitForSeconds(0.1f);
         print(spawnattache);
-        spawnplace = new Vector3(spawnattache.transform.position.x, spawnattache.transform.position.y - 2.1f, spawnattache.transform.position.z);
-        GameObject tmp = Instantiate(bodysnake, spawnplace, Quaternion.identity);
+        spawnplace = new Vector3(spawnattache.transform.position.x, spawnattache.transform.position.y, spawnattache.transform.position.z);
+        tmp = Instantiate(bodysnake, spawnplace, Quaternion.identity);
         tmp.GetComponent<snakebody>().spawnattach = spawnattache;
     }
 }
