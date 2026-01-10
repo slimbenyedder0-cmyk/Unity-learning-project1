@@ -17,21 +17,25 @@ public class snakebody : MonoBehaviour
     {
         if (headfollow == false)
         {
-            StartCoroutine(Headfollow());
+            StartCoroutine(Leadfollow());
         }
     }
 
-    public IEnumerator Headfollow()
+    public IEnumerator Leadfollow()
     {
         yield return null;
         headfollow = true;
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.6f);
         headfollow = false;
-        if (Vector3.Distance(transform.position, spawnattach.transform.position) > 0.01f)
+        if (Vector3.Distance(transform.position, spawnattach.transform.position) > 0.1f)
         {
             Trajectory = spawnattach.transform.position - transform.position;
             this.GetComponent<Rigidbody>().linearVelocity = Trajectory.normalized * 12;
             //transform.position = Vector3.MoveTowards(transform.position, spawnattach.transform.position, 10f * Time.deltaTime);
+        }
+        else
+        {
+            this.GetComponent<Rigidbody>().linearVelocity = Trajectory.normalized * 0;
         }
     }
 }
