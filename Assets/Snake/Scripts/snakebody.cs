@@ -29,8 +29,8 @@ public class snakebody : MonoBehaviour
         if (Vector3.Distance(transform.position, spawnattach.transform.position) > 0.6f)
         {
             Trajectory = spawnattach.transform.position - transform.position;
+            transform.rotation = spawnattach.transform.rotation;
             this.GetComponent<Rigidbody>().linearVelocity = Trajectory.normalized * 6;
-            //transform.position = Vector3.MoveTowards(transform.position, spawnattach.transform.position, 10f * Time.deltaTime);
         }
         else if (Vector3.Distance(transform.position, spawnattach.transform.position) <= 0.6f)
         {

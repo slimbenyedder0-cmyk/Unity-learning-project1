@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     private HeadSnakeScript HeadSnake; // Référence au script de la tête
     private Vector2 jumpInput;
     private Vector2 moveInput;
+    public InputActionReference JumpAction;
     public void Awake()
     {
         if (HeadSnake == null)
@@ -35,15 +36,21 @@ public class PlayerController : MonoBehaviour
             Debug.LogWarning("HeadSnakeScript n'est pas assigné dans PlayerController.");
         }
     }
+    public void OnEnable()
+    {
+        JumpAction.action.performed += OnJump;
+        JumpAction.action.Enable();
+    }
+    public void OnDisable()
+    {
+        JumpAction.action.performed -= OnJump;
+        JumpAction.action.Disable();
+    }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
-        //jumpInput = context.ReadValue<Vector2>();
-        Debug.Log("ça saute pas");
-        if (HeadSnake != null && !context.performed)
+        if (HeadSnake != null)
         {
             HeadSnake.ReceiveJumpInput();
-            Debug.Log( "ça saute");
         }
     }
 }

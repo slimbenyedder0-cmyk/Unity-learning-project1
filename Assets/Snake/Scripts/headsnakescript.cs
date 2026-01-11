@@ -19,6 +19,7 @@ public class HeadSnakeScript : MonoBehaviour
     private float inputH;
     private float inputV;
     private float inputY;
+    public bool canjump;
     public GameObject bodysnake;
     public GameObject spawnattache;
     private Vector3 spawnplace;
@@ -71,7 +72,26 @@ public class HeadSnakeScript : MonoBehaviour
     }
     public void ReceiveJumpInput()
     {
-        this.GetComponent<Rigidbody>().linearVelocity += new Vector3(0, 10, 0);
+        if (canjump)
+        {
+            this.GetComponent<Rigidbody>().linearVelocity += new Vector3(0, 10, 0);
+        }
+    }
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject == GameObject.Find("Map"))
+        {
+            print("ses la map");
+            canjump = true;
+        }
+    }
+    public void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject == GameObject.Find("Map"))
+        {
+            print("ses pa la map");
+            canjump = false;
+        }
     }
     void ClassicMove(float inputH,float inputV)
     { // Déplacement classique : un axe à la fois mais ce qui est en dessous est temporaire, en attente de revoir avec Khlil pour le comportement exact et l'implémentation d'une grille si nécessaire.
