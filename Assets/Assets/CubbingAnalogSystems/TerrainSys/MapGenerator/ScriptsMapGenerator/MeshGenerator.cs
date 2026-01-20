@@ -5,22 +5,23 @@ public static class MeshGenerator
 {
     public static MeshData GenerateTerrainMesh(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve, int levelOfDetail)
     {
+        heightCurve = new AnimationCurve(heightCurve.keys);
         int width = heightMap.GetLength(0);
         int height = heightMap.GetLength(1);
         float topleftX = (width - 1) / -2f;
         float topleftZ = (height - 1) / 2f;
 
-        int meshSimplificationIncrement = (levelOfDetail==0)?1:levelOfDetail*2;
-        int verticesPerline = (width - 1) /meshSimplificationIncrement +1;
+        int meshSimplificationIncrement = (levelOfDetail == 0) ? 1 : levelOfDetail * 2;
+        int verticesPerline = (width - 1) / meshSimplificationIncrement + 1;
 
-        MeshData meshData = new MeshData(verticesPerline,verticesPerline);
+        MeshData meshData = new MeshData(verticesPerline, verticesPerline);
         int vertexIndex = 0;
 
-        for (int y = 0; y < height; y+= meshSimplificationIncrement)
+        for (int y = 0; y < height; y += meshSimplificationIncrement)
         {
-            for (int x = 0; x < width; x+= meshSimplificationIncrement)
+            for (int x = 0; x < width; x += meshSimplificationIncrement)
             {
-                meshData.vertices[vertexIndex] = new Vector3(topleftX + x, heightCurve.Evaluate (heightMap[x, y]) * heightMultiplier, topleftZ - y);
+                meshData.vertices[vertexIndex] = new Vector3(topleftX + x, heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier, topleftZ - y);
                 meshData.uvs[vertexIndex] = new Vector2(x / (float)width, y / (float)height);
 
                 if (x < width - 1 && y < height - 1)
