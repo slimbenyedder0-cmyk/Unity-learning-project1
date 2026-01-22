@@ -11,6 +11,7 @@ using System.Collections.Generic;
 public class MapGenerator : MonoBehaviour
 {
     public Noise.NormalizeMode normalizeMode;
+
     /// <summary>
     /// Énumération des modes d'affichage disponibles pour la carte générée
     /// </summary>
@@ -18,7 +19,8 @@ public class MapGenerator : MonoBehaviour
     {
         NoiseMap,   // Affiche uniquement la carte de bruit en niveaux de gris
         ColorMap,   // Affiche la carte colorée selon les régions de terrain
-        Mesh        // Affiche le mesh 3D avec hauteurs et textures
+        Mesh,       // Affiche le mesh 3D avec hauteurs et textures
+        FalloffMap  // Affiche la carte de chute (falloff map)
     }
 
     [Header("Display Settings")]
@@ -51,6 +53,10 @@ public class MapGenerator : MonoBehaviour
     public AnimationCurve meshHeightCurve;
     public TerrainType[] regions;
 
+    [Header("Falloff Map")]
+    [Tooltip("Active la carte de chute pour créer des îles")]
+    public bool useFalloffMap;
+
     /// <summary>
     /// Files d'attente thread-safe pour les callbacks de MapData et MeshData
     /// </summary>
@@ -64,6 +70,28 @@ public class MapGenerator : MonoBehaviour
     /// Hauteur réelle de l'eau dans le monde (calculée depuis waterLevel et meshHeightMultiplier)
     /// </summary>
     public float actualWaterHeight { get; private set; }
+
+    /// <summary>
+    /// Échelle réelle de l'eau
+    /// </summary>
+    public float actualWaterScale { get; private set; }
+
+    /// <summary>
+    /// Carte de falloff précalculée
+    /// </summary>
+    float[,] falloffMap;
+
+    #region Initialisation
+
+    /// <summary>
+    /// Génère la falloff map au démarrage si nécessaire
+    /// </summary>
+    private void Awake()
+    {
+        falloffMap = FalloffGenerator.GenerateFalloffMap(mapChunkSize);
+    }
+
+    #endregion
 
     #region Update - Gestion des Threads
 
@@ -104,8 +132,14 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     public void GenerateMapInEditor()
     {
+        // Vérifie que les régions sont configurées (sauf pour FalloffMap)
+        if (drawMode != DrawMode.FalloffMap && (regions == null || regions.Length == 0))
+        {
+            Debug.LogError("[MapGenerator] Aucune région de terrain définie! Ajoutez des régions dans l'inspecteur avant de générer.");
+            return;
+        }
+
         MapData mapData = GenerateMapData(Vector2.zero);
-        
 
         // Trouve le composant d'affichage dans la scène
         MapDisplay display = FindFirstObjectByType<MapDisplay>();
@@ -132,6 +166,10 @@ public class MapGenerator : MonoBehaviour
                     MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, editorPreviewLOD),
                     TextureGenerator.TextureFromColorMap(mapData.colorMap, mapChunkSize, mapChunkSize)
                 );
+                break;
+
+            case DrawMode.FalloffMap:
+                display.DrawTexture(TextureGenerator.TextureFromHeightMap(FalloffGenerator.GenerateFalloffMap(mapChunkSize)));
                 break;
         }
     }
@@ -172,12 +210,13 @@ public class MapGenerator : MonoBehaviour
     /// Le callback sera appelé sur le thread principal Unity dans Update().
     /// </summary>
     /// <param name="mapData">Données de la carte à convertir en mesh</param>
+    /// <param name="lod">Niveau de détail du mesh</param>
     /// <param name="callback">Fonction appelée quand le mesh est prêt</param>
-    public void RequestMeshData(MapData mapData,int lod, Action<MeshGenerator.MeshData> callback)
+    public void RequestMeshData(MapData mapData, int lod, Action<MeshGenerator.MeshData> callback)
     {
         ThreadStart threadStart = delegate
         {
-            MeshDataThread(mapData,lod, callback);
+            MeshDataThread(mapData, lod, callback);
         };
         new Thread(threadStart).Start();
     }
@@ -185,14 +224,13 @@ public class MapGenerator : MonoBehaviour
     /// <summary>
     /// Génère les MeshData sur un thread séparé et enfile le callback.
     /// </summary>
-    void MeshDataThread(MapData mapData,int lod, Action<MeshGenerator.MeshData> callback)
+    void MeshDataThread(MapData mapData, int lod, Action<MeshGenerator.MeshData> callback)
     {
-        MeshGenerator.MeshData meshData = MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, editorPreviewLOD);
+        MeshGenerator.MeshData meshData = MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, lod);
         lock (meshDataThreadInfoQueue)
         {
             meshDataThreadInfoQueue.Enqueue(new MapThreadInfo<MeshGenerator.MeshData>(callback, meshData));
         }
-
     }
 
     #endregion
@@ -215,9 +253,21 @@ public class MapGenerator : MonoBehaviour
             octaves,
             persistence,
             lacunarity,
-            centre + offset
-            , normalizeMode
+            centre + offset,
+            normalizeMode
         );
+
+        // Applique la falloff map si activée
+        if (useFalloffMap)
+        {
+            for (int y = 0; y < mapChunkSize; y++)
+            {
+                for (int x = 0; x < mapChunkSize; x++)
+                {
+                    noiseMap[x, y] = Mathf.Clamp01(noiseMap[x, y] - falloffMap[x, y]);
+                }
+            }
+        }
 
         // Crée un tableau de couleurs basé sur la hauteur de chaque point
         Color[] colorMap = GenerateColorMap(noiseMap);
@@ -232,6 +282,18 @@ public class MapGenerator : MonoBehaviour
     {
         Color[] colorMap = new Color[mapChunkSize * mapChunkSize];
 
+        // Vérifie que les régions sont définies
+        if (regions == null || regions.Length == 0)
+        {
+            Debug.LogWarning("[MapGenerator] Aucune région définie, utilisation de blanc par défaut");
+            // Remplit avec du blanc par défaut
+            for (int i = 0; i < colorMap.Length; i++)
+            {
+                colorMap[i] = Color.white;
+            }
+            return colorMap;
+        }
+
         for (int y = 0; y < mapChunkSize; y++)
         {
             for (int x = 0; x < mapChunkSize; x++)
@@ -241,17 +303,16 @@ public class MapGenerator : MonoBehaviour
                 // Trouve la région correspondante à cette hauteur
                 for (int i = 0; i < regions.Length; i++)
                 {
+                    // Logique avec >= pour que l'offset fonctionne correctement
                     if (currentHeight >= regions[i].height)
                     {
                         colorMap[y * mapChunkSize + x] = regions[i].color;
-                        
                     }
                     else
                     {
                         break;
                     }
                 }
-                
             }
         }
 
@@ -266,9 +327,10 @@ public class MapGenerator : MonoBehaviour
     /// Calcule la hauteur réelle de l'eau dans le monde (en unités Unity).
     /// Convertit waterLevel (0-1) en hauteur mondiale en utilisant meshHeightMultiplier.
     /// </summary>
-    private void CalculateActualWaterHeight()
+    public void CalculateActualWaterData()
     {
         actualWaterHeight = waterLevel * meshHeightMultiplier;
+        actualWaterScale = mapChunkSize;
     }
 
     /// <summary>
@@ -299,11 +361,12 @@ public class MapGenerator : MonoBehaviour
             octaves = 0;
         }
 
+        falloffMap = FalloffGenerator.GenerateFalloffMap(mapChunkSize);
         // Vérifie que waterLevel correspond approximativement à une région de terrain
         ValidateWaterLevel();
 
         // Recalcule la hauteur d'eau si les paramètres changent
-        CalculateActualWaterHeight();
+        CalculateActualWaterData();
     }
 
     /// <summary>

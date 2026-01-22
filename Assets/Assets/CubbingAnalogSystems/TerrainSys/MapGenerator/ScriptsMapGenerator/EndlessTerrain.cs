@@ -8,8 +8,8 @@ using System.Collections.Generic;
 /// </summary>
 public class EndlessTerrain : MonoBehaviour
 {
-    
-    
+    const float scale = 1f;
+
     const float sqrPlayerMoveThresholdForChunkUpdate = 25f*25f;
     /// <summary>
     /// Distance maximale de vue en unités Unity - détermine jusqu'où les chunks sont visibles
@@ -126,7 +126,7 @@ public class EndlessTerrain : MonoBehaviour
     {
         
         // Convertit la position 3D du viewer en 2D (ignore Y car on travaille sur un plan horizontal)
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z)/scale;
         if ((viewerPositionOld - viewer.position).sqrMagnitude > sqrPlayerMoveThresholdForChunkUpdate)
         {
             viewerPositionOld = viewer.position;
@@ -236,8 +236,9 @@ public class EndlessTerrain : MonoBehaviour
             meshFilter = meshObject.AddComponent<MeshFilter>();
             meshRenderer.material = material;
 
-            meshObject.transform.position = positionV3;
+            meshObject.transform.position = positionV3 * scale;
             meshObject.transform.parent = parent;
+            meshObject.transform.localScale = Vector3.one * scale;
 
             // Désactive le chunk par défaut (sera activé si dans la distance de vue)
             SetVisible(false);

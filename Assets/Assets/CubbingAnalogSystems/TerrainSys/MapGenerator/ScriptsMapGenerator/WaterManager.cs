@@ -7,45 +7,59 @@ using System.Collections;
 /// </summary>
 public class WaterManager : MonoBehaviour
 {
+    [Header("Activation globale")]
+    [Tooltip("DÉSACTIVE COMPLÈTEMENT le système d'eau (pour tests sans eau)")]
+    [SerializeField] private bool enableWaterSystem = true;
+
     [Header("Configuration de l'eau")]
     [Tooltip("Matériau appliqué au plan d'eau")]
     [SerializeField] private Material waterMaterial;
 
     [Tooltip("Vitesse de suivi du viewer (plus élevé = plus rapide)")]
-    [SerializeField, Range(1f, 20f)] private float followSpeed = 5f;
+    [SerializeField, Range(1f, 20f)] private float followSpeed = 10f;
+
+    [Tooltip("Distance minimale avant de mettre à jour la position (optimisation)")]
+    [SerializeField, Range(0.1f, 50f)] private float updateThreshold = 15f;
+
+    [Tooltip("Multiplicateur de taille du plan d'eau (>1 pour éviter de voir les bords)")]
+    [SerializeField, Range(1f, 3f)] private float waterScaleMultiplier = 1.5f;
 
     [Tooltip("Si coché, désactive le collider du plan d'eau")]
     [SerializeField] private bool disableCollider = true;
 
-    [Header("Références (auto-assignées)")]
-    [Tooltip("Preview visible dans l'éditeur uniquement")]
-    [SerializeField] private GameObject waterPlanePreview;
+    [Header("Gizmo")]
+    [SerializeField] private bool displayGizmo = true;
 
-    // Références internes
-    private GameObject waterPlaneObject;        // Le plan d'eau généré en jeu
-    private Coroutine waterFollowCoroutine;     // Coroutine de suivi du viewer
-    private MapGenerator mapGenerator;          // Référence au MapGenerator
-    private Transform viewerPosition;           // Position du viewer (depuis EndlessTerrain)
-
-    // État
+    private GameObject waterPlaneObject;
+    private Coroutine waterFollowCoroutine;
+    private MapGenerator mapGenerator;
+    private Transform viewerPosition;
     private bool isWaterActive = false;
 
     #region Initialisation et Nettoyage
 
     void Awake()
     {
-        // Désactive la preview en mode jeu (elle sert uniquement dans l'éditeur)
-        if (waterPlanePreview != null)
+        // HARD DISABLE : si désactivé, ne rien initialiser du tout
+        if (!enableWaterSystem)
         {
-            waterPlanePreview.SetActive(false);
+            Debug.Log("[WaterManager] Système d'eau DÉSACTIVÉ - Aucune initialisation");
+            enabled = false;
+            return;
         }
 
-        // Récupère la référence au MapGenerator
         mapGenerator = GetComponent<MapGenerator>();
+
         if (mapGenerator == null)
         {
             Debug.LogError("[WaterManager] MapGenerator introuvable sur ce GameObject!");
+            enabled = false;
+            return;
         }
+
+        // Calcule les données d'eau mais N'INITIALISE PAS encore le plan
+        // L'initialisation sera faite par EndlessTerrain quand le viewer sera prêt
+        mapGenerator.CalculateActualWaterData();
     }
 
     void OnDisable()
@@ -60,63 +74,67 @@ public class WaterManager : MonoBehaviour
 
     #endregion
 
-    #region Méthodes Publiques
+    #region API Publique
 
-    /// <summary>
-    /// Initialise et active le plan d'eau.
-    /// Appelé par MapGenerator ou EndlessTerrain après l'initialisation.
-    /// </summary>
-    /// <param name="viewer">Transform du viewer à suivre (depuis EndlessTerrain)</param>
-    /// <param name="terrainSize">Taille du terrain pour dimensionner le plan d'eau</param>
-    public void InitializeWater(Transform viewer, int terrainSize)
+    public void InitializeWater(Transform viewer, int waterScale)
     {
-        if (mapGenerator == null)
+        // HARD DISABLE : si désactivé, ignore complètement l'appel
+        if (!enableWaterSystem)
         {
-            Debug.LogError("[WaterManager] MapGenerator non assigné, impossible d'initialiser l'eau!");
             return;
         }
 
-        // Assigne le viewer
+        if (mapGenerator == null)
+        {
+            Debug.LogError("[WaterManager] MapGenerator non initialisé!");
+            return;
+        }
+
         viewerPosition = viewer;
 
-        // Calcule la position initiale de l'eau
-        float waterHeight = mapGenerator.actualWaterHeight;
+        if (viewerPosition == null)
+        {
+            Debug.LogWarning("[WaterManager] Viewer null - impossible d'initialiser l'eau");
+            return;
+        }
+
+        // Calcul de la position et échelle avec multiplicateur pour éviter les bords
         Vector3 waterPosition = new Vector3(
             viewerPosition.position.x,
-            waterHeight,
+            mapGenerator.actualWaterHeight,
             viewerPosition.position.z
         );
 
-        // Calcule l'échelle (un Plane Unity fait 10x10 unités par défaut)
-        Vector3 waterScale = new Vector3(
-            terrainSize / 10f,
-            1f,
-            terrainSize / 10f
-        );
+        // Application du multiplicateur pour agrandir le plan d'eau
+        float scaledSize = waterScale * 5f * waterScaleMultiplier;
+        Vector3 scale = new Vector3(scaledSize, 1f, scaledSize);
 
-        // Génère ou met à jour le plan d'eau
+        // Génération ou mise à jour du plan
         if (waterPlaneObject == null)
         {
-            GenerateWaterPlane(waterPosition, waterScale);
+            GenerateWaterPlane(waterPosition, scale);
         }
         else
         {
-            UpdateWaterTransform(waterPosition, waterScale);
+            UpdateWaterTransform(waterPosition, scale);
             waterPlaneObject.SetActive(true);
         }
 
-        // Lance le suivi du viewer
         StartWaterFollowing();
         isWaterActive = true;
 
-        Debug.Log($"[WaterManager] Eau initialisée à la hauteur {waterHeight} et suit le viewer");
+        Debug.Log($"[WaterManager] Eau initialisée à hauteur {mapGenerator.actualWaterHeight} (taille: {scaledSize})");
     }
 
-    /// <summary>
-    /// Désactive complètement le plan d'eau.
-    /// </summary>
     public void DisableWater()
     {
+        // HARD DISABLE : nettoie et désactive le component entier
+        if (!enableWaterSystem)
+        {
+            enabled = false;
+            return;
+        }
+
         StopWaterFollowing();
 
         if (waterPlaneObject != null)
@@ -127,11 +145,20 @@ public class WaterManager : MonoBehaviour
         isWaterActive = false;
     }
 
-    /// <summary>
-    /// Change le matériau de l'eau à la volée.
-    /// </summary>
     public void SetWaterMaterial(Material newMaterial)
     {
+        // HARD DISABLE : ignore les changements de matériau
+        if (!enableWaterSystem)
+        {
+            return;
+        }
+
+        if (newMaterial == null)
+        {
+            Debug.LogWarning("[WaterManager] Tentative d'assigner un matériau null");
+            return;
+        }
+
         waterMaterial = newMaterial;
 
         if (waterPlaneObject != null)
@@ -146,44 +173,33 @@ public class WaterManager : MonoBehaviour
 
     #endregion
 
-    #region Génération et Gestion du Plan d'Eau
+    #region Génération du Plan d'Eau
 
-    /// <summary>
-    /// Crée le GameObject du plan d'eau avec tous ses composants.
-    /// </summary>
     private void GenerateWaterPlane(Vector3 position, Vector3 scale)
     {
-        // Nettoie l'ancien plan s'il existe
         if (waterPlaneObject != null)
         {
             Destroy(waterPlaneObject);
         }
 
-        // Crée un plan primitif
+        // Création du plan primitif
         waterPlaneObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
         waterPlaneObject.name = "WaterPlane_Dynamic";
         waterPlaneObject.transform.SetParent(transform);
         waterPlaneObject.transform.position = position;
         waterPlaneObject.transform.localScale = scale;
 
-        // Configure le rendu
         ConfigureWaterRenderer();
-
-        // Configure le collider
         ConfigureWaterCollider();
 
         Debug.Log("[WaterManager] Plan d'eau généré");
     }
 
-    /// <summary>
-    /// Configure le Renderer du plan d'eau (matériau et ombres).
-    /// </summary>
     private void ConfigureWaterRenderer()
     {
         Renderer renderer = waterPlaneObject.GetComponent<Renderer>();
         if (renderer == null) return;
 
-        // Applique le matériau
         if (waterMaterial != null)
         {
             renderer.material = waterMaterial;
@@ -193,26 +209,29 @@ public class WaterManager : MonoBehaviour
             Debug.LogWarning("[WaterManager] Aucun matériau d'eau assigné!");
         }
 
-        // Configure les ombres
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.receiveShadows = true;
     }
 
-    /// <summary>
-    /// Configure le Collider du plan d'eau.
-    /// </summary>
     private void ConfigureWaterCollider()
     {
         Collider collider = waterPlaneObject.GetComponent<Collider>();
-        if (collider != null && disableCollider)
+        if (collider != null)
         {
-            collider.enabled = false;
+            if (disableCollider)
+            {
+                // Désactive complètement pour éviter les collisions
+                collider.enabled = false;
+            }
+            else
+            {
+                // Mode Trigger si activé pour éviter les blocages physiques
+                collider.isTrigger = true;
+                Debug.LogWarning("[WaterManager] Collider d'eau activé en mode Trigger.");
+            }
         }
     }
 
-    /// <summary>
-    /// Met à jour la position et l'échelle du plan d'eau existant.
-    /// </summary>
     private void UpdateWaterTransform(Vector3 position, Vector3 scale)
     {
         if (waterPlaneObject == null) return;
@@ -221,9 +240,6 @@ public class WaterManager : MonoBehaviour
         waterPlaneObject.transform.localScale = scale;
     }
 
-    /// <summary>
-    /// Détruit complètement le plan d'eau et arrête toutes les coroutines.
-    /// </summary>
     private void DestroyWaterPlane()
     {
         StopWaterFollowing();
@@ -241,12 +257,8 @@ public class WaterManager : MonoBehaviour
 
     #region Suivi du Viewer
 
-    /// <summary>
-    /// Démarre la coroutine qui fait suivre l'eau au viewer.
-    /// </summary>
     private void StartWaterFollowing()
     {
-        // Arrête la coroutine précédente si elle existe
         StopWaterFollowing();
 
         if (waterPlaneObject != null && viewerPosition != null)
@@ -255,9 +267,6 @@ public class WaterManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Arrête la coroutine de suivi.
-    /// </summary>
     private void StopWaterFollowing()
     {
         if (waterFollowCoroutine != null)
@@ -267,28 +276,40 @@ public class WaterManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Coroutine : fait suivre le plan d'eau au viewer (position X/Z uniquement).
-    /// La hauteur Y reste fixe selon MapGenerator.actualWaterHeight.
-    /// </summary>
     private IEnumerator FollowViewerCoroutine()
     {
+        // Cache la dernière hauteur d'eau pour éviter les recalculs
+        float cachedWaterHeight = mapGenerator.actualWaterHeight;
+        Vector3 lastPosition = waterPlaneObject.transform.position;
+
         while (waterPlaneObject != null && viewerPosition != null && mapGenerator != null)
         {
-            // Position cible : suit le viewer en X/Z, garde la hauteur d'eau
+            // Position cible : suit X/Z du viewer, garde Y fixe
             Vector3 targetPosition = new Vector3(
                 viewerPosition.position.x,
-                mapGenerator.actualWaterHeight,  // Hauteur fixe depuis MapGenerator
+                cachedWaterHeight,
                 viewerPosition.position.z
             );
 
-            // Interpolation smooth vers la position cible
-            waterPlaneObject.transform.position = Vector3.Lerp(
-                waterPlaneObject.transform.position,
-                targetPosition,
-                followSpeed * Time.deltaTime
-            );
+            // Calcul distance horizontale (ignore Y pour optimisation)
+            float sqrDistance = (waterPlaneObject.transform.position.x - targetPosition.x) *
+                                (waterPlaneObject.transform.position.x - targetPosition.x) +
+                                (waterPlaneObject.transform.position.z - targetPosition.z) *
+                                (waterPlaneObject.transform.position.z - targetPosition.z);
 
+            // Mise à jour uniquement si déplacement significatif (évite calculs inutiles)
+            if (sqrDistance > updateThreshold * updateThreshold)
+            {
+                // Interpolation smooth pour mouvement fluide
+                waterPlaneObject.transform.position = Vector3.Lerp(
+                    waterPlaneObject.transform.position,
+                    targetPosition,
+                    followSpeed * Time.deltaTime
+                );
+            }
+
+            // Yield une frame sur deux pour réduire encore la charge CPU
+            yield return null;
             yield return null;
         }
     }
@@ -297,21 +318,18 @@ public class WaterManager : MonoBehaviour
 
     #region Gizmos
 
-    /// <summary>
-    /// Affiche un aperçu visuel du plan d'eau dans l'éditeur Scene.
-    /// </summary>
     void OnDrawGizmos()
     {
-        if (waterPlaneObject != null && isWaterActive)
-        {
-            Gizmos.color = new Color(0.2f, 0.5f, 0.8f, 0.3f);
+        // HARD DISABLE : pas de gizmo si système désactivé
+        if (!enableWaterSystem || !displayGizmo || waterPlaneObject == null || !isWaterActive)
+            return;
 
-            // Taille du gizmo (Plane = 10x10 unités)
-            Vector3 size = waterPlaneObject.transform.localScale * 10f;
-            size.y = 0.1f;
+        Gizmos.color = new Color(0.2f, 0.5f, 0.8f, 0.3f);
 
-            Gizmos.DrawCube(waterPlaneObject.transform.position, size);
-        }
+        Vector3 size = waterPlaneObject.transform.localScale * 10f;
+        size.y = 0.1f;
+
+        Gizmos.DrawCube(waterPlaneObject.transform.position, size);
     }
 
     #endregion

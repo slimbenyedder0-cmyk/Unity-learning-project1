@@ -117,7 +117,7 @@ public static class Noise
                 }
 
                 // Stocke la valeur brute
-                noiseMap[x, y] = Mathf.Clamp(noiseHeight,0,int.MaxValue);
+                noiseMap[x, y] = noiseHeight;
             }
         }
 
@@ -134,7 +134,7 @@ public static class Noise
                 else
                 {
                     // Normalisation globale : basée sur la hauteur max théorique
-                    float normalizedHeight = (noiseMap[x, y] + 1) / (2f * maxPossibleHeight / 1.75f);
+                    float normalizedHeight = (noiseMap[x, y] + 1) / (2f * maxPossibleHeight);
                     noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, 1);
                 }
             }
