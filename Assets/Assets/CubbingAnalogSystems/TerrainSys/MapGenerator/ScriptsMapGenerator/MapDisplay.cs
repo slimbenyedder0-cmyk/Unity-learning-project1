@@ -1,24 +1,24 @@
 using UnityEngine;
+using System.Collections;
 
-// Displays a noise map as a texture on a renderer
 public class MapDisplay : MonoBehaviour
 {
-    public Renderer textureRenderer;
+
+    public Renderer textureRender;
     public MeshFilter meshFilter;
     public MeshRenderer meshRenderer;
-    
-    public void DrawTexture(Texture2D texture)
-    { 
-   
 
-        textureRenderer.sharedMaterial.mainTexture = texture;
-        textureRenderer.transform.localScale = new Vector3(texture.width, 1, texture.height);
+    public void DrawTexture(Texture2D texture)
+    {
+        textureRender.sharedMaterial.mainTexture = texture;
+        textureRender.transform.localScale = new Vector3(texture.width, 1, texture.height);
     }
-   
-    public void DrawMesh(MeshGenerator.MeshData meshData, Texture2D texture)
+
+    public void DrawMesh(MeshData meshData)
     {
         meshFilter.sharedMesh = meshData.CreateMesh();
-        meshRenderer.sharedMaterial.mainTexture = texture;
+
+        meshFilter.transform.localScale = Vector3.one * FindFirstObjectByType<MapGenerator>().terrainData.uniformScale;
     }
-    
+
 }
