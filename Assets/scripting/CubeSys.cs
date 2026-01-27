@@ -39,7 +39,7 @@ public class CubeSys : MonoBehaviour
    //     }
    public void ReceiveClickInput()
     {
-        if (this.transform.parent != null);
+        if (this.transform.parent != null)
         {
             Released = true;
         }
