@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class CatapultState
 {
-    private CatapultController catapult;
-    private CatapultStateMachine stateMachine;
-    private Animator animationController;
-    private string animationName;
+    public CatapultController catapult;
+    public CatapultStateMachine stateMachine;
+    public Animator animationController;
+    public string animationName;
 
     public CatapultState(CatapultController _catapult, CatapultStateMachine _stateMachine, Animator _animationController, string _animationName)
     {
