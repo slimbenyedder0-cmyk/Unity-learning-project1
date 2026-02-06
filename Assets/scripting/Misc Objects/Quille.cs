@@ -1,161 +1,155 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events; // Obligatoire pour les UnityEvents
 using System.Collections;
-using NUnit.Framework;
 
-
+/// <summary>
+/// Gère le comportement d'une quille avec système d'événements pour la communication externe.
+/// </summary>
+[RequireComponent(typeof(Rigidbody))]
 public class Quille : MonoBehaviour
-
 {
+    #region Enums
+    public enum FallState { Null, ByCube, ByQuille }
+    #endregion
+
+    #region Événements (Observer Pattern)
+    [Header("Événements de Chute")]
+    [Tooltip("Se déclenche dès que la quille commence à tomber.")]
+    public UnityEvent OnQuilleFallen;
+
+    [Tooltip("Se déclenche spécifiquement si le Cube fait tomber la quille.")]
+    public UnityEvent OnHitByCube;
+
+    [Tooltip("Se déclenche si une autre quille fait tomber celle-ci.")]
+    public UnityEvent OnHitByQuille;
+    #endregion
+
+    #region Variables - Physique (Lévitation)
+    [Header("Paramètres de Lévitation")]
+    public float targetHeight = 1.2f;
+    public float hoverForce = 20f;
+    public float damping = 5f;
+
+    private Rigidbody rb;
+    #endregion
+
+    #region Variables - État & Assets
+    [Header("État")]
     public bool hasFallen;
-    public Quaternion cylinderRotation;
-    public Vector3 startRotation;
-    public GameObject cube;
+    public FallState myCause = FallState.Null;
+    private bool isProcessed;
+
+    [Header("Assets - Visuels")]
     public GameObject spiralemouvante;
-    public GameObject spiralefixe;
-    public Material Originalmaterial;
-    public bool rougir;
-    public Material QuilleChargee;
-    public Material Touchage;
-    public Vector3 spiralefixeposition;
-    public GameObject particulespirale;
     public GameObject particulescharg;
     public GameObject particulesactiv;
-    public bool noircir;
-    public FallState myCause = FallState.Null;
-    public Vector3 particuleposition;
-    public enum FallState
-    {
-        Null, ByCube, ByQuille
-    }
-    public List collidedWith;
+    public Material quilleChargeeMat;
+    public Material touchageMat;
+    private Material originalMaterial;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private MeshRenderer meshRenderer;
+    private GameObject particulespirale;
+    private GameObject spiralefixe;
+    #endregion
+
+    #region Unity Lifecycle
+    private void Awake()
     {
-        for (var i = this.transform.childCount - 1; i >= 0; i--)
+        rb = GetComponent<Rigidbody>();
+        meshRenderer = GetComponent<MeshRenderer>();
+        if (meshRenderer != null) originalMaterial = meshRenderer.material;
+    }
+
+    private void Start()
+    {
+        InitializeReferences();
+        StartCoroutine(CheckRotationCoroutine());
+    }
+
+    private void FixedUpdate()
+    {
+        if (!hasFallen && rb != null)
         {
-            if (this.transform.GetChild(i).GetComponent<ParticleSystem>() != null && particulespirale == null)
-            {
-                particulespirale = (this.transform.GetChild(i).gameObject);
-                particuleposition = particulespirale.transform.position;
-            }
-           else if (this.transform.GetChild(i).GetComponent<SpriteRenderer>() != null && spiralefixe == null)
-            {
-                spiralefixe = (this.transform.GetChild(i).gameObject);
-                spiralefixeposition = spiralefixe.transform.position;
-            }
+            PhysicsSys.HoverAtHeight(rb, targetHeight, hoverForce, damping);
         }
-        cylinderRotation = transform.rotation;
-        startRotation = new Vector3 (this.transform.rotation.x,this.transform.rotation.y,this.transform.rotation.z);
-        GetHit();
-        StartCoroutine(CheckRotationcoroutine());
-        cube = GameObject.Find("Le Cube");
-        Originalmaterial = GameObject.Find("QuillePrefab").GetComponent<MeshRenderer>().material;
+    }
+    #endregion
+
+    #region Logique de Collision
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (isProcessed) return;
+
+        if (collision.gameObject.name == "Le Cube")
+        {
+            myCause = FallState.ByCube;
+            // On déclenche l'événement spécifique au Cube
+            OnHitByCube?.Invoke();
+            StartCoroutine(HandleImpactSequence(touchageMat, particulesactiv));
+        }
+        else if (collision.gameObject.TryGetComponent<Quille>(out _))
+        {
+            myCause = FallState.ByQuille;
+            // On déclenche l'événement spécifique à la Quille
+            OnHitByQuille?.Invoke();
+            StartCoroutine(HandleImpactSequence(quilleChargeeMat, particulescharg, true));
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator HandleImpactSequence(Material feedbackMat, GameObject particlePrefab, bool doubleScale = false)
     {
+        isProcessed = true;
+        if (feedbackMat != null) meshRenderer.material = feedbackMat;
+
+        if (spiralemouvante && spiralefixe) 
+            Instantiate(spiralemouvante, spiralefixe.transform.position, Quaternion.identity);
         
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (rougir == false && noircir == false)
+        if (particlePrefab && particulespirale)
         {
-            if (collision.gameObject.name == "Le Cube")
-            {
-                StartCoroutine(Coroutineofcollision());
-                myCause = FallState.ByCube;
+            GameObject effect = Instantiate(particlePrefab, particulespirale.transform.position, particulespirale.transform.rotation);
+            effect.transform.parent = this.transform;
+            if (doubleScale) effect.transform.localScale *= 2f;
+        }
 
-            }
-            else if (collision.gameObject.GetComponent<MeshFilter>().sharedMesh == this.GetComponent<MeshFilter>().sharedMesh && collision.gameObject != this.gameObject)
+        if (particulespirale) Destroy(particulespirale);
+        if (spiralefixe) Destroy(spiralefixe);
+
+        yield return new WaitForSeconds(2.0f);
+        if (originalMaterial) meshRenderer.material = originalMaterial;
+    }
+    #endregion
+
+    #region Surveillance de Chute
+    private IEnumerator CheckRotationCoroutine()
+    {
+        while (!hasFallen)
+        {
+            yield return new WaitForSeconds(0.2f);
+
+            if (Vector3.Angle(transform.up, Vector3.up) > 45f)
             {
-                StartCoroutine(CoroutineofcollisionQuilletoQuille());
-                myCause = FallState.ByQuille;
+                hasFallen = true;
+                
+                // --- DÉCLENCHEMENT DES ÉVÉNEMENTS ---
+                Debug.Log($"<color=green>EVENT :</color> {name} a déclenché ses événements de chute.");
+                
+                // On appelle OnQuilleFallen (général)
+                OnQuilleFallen?.Invoke();
+
+                rb.useGravity = true; 
             }
-            // cette partie ne marche pas car les quilles sont constemment en collision avec le sol (sinon elles plongeraient dans le vide), d'autre part sans check, ça se déclenche
-            // en continu
-            //   else
-            //     {
-            //       myCause = FallState.ByQuille;
-            //     Debug.Log("Une quille m'a renversée");
-            //}
         }
     }
+    #endregion
 
-
-   
-    public void GetHit()
+    private void InitializeReferences()
     {
-        //
-    }
-    public IEnumerator Coroutineofcollision()
-    {
-        yield return null;
-
-            rougir = true;
-            noircir = true;
-            GameObject tmp = Instantiate(spiralemouvante, spiralefixeposition, Quaternion.identity);
-            GameObject effectemp = Instantiate(particulesactiv, particuleposition, particulespirale.transform.rotation);
-            effectemp.transform.parent = this.transform;
-        //spiralefixe.GetComponent<SpriteRenderer>().enabled = false;
-        Destroy(particulespirale);
-            Destroy(spiralefixe);
-            this.GetComponent<MeshRenderer>().material = Touchage;
-            yield return new WaitForSeconds(2.0f);
-            this.GetComponent<MeshRenderer>().material = Originalmaterial;
-       
-    }
-
-    public IEnumerator CoroutineofcollisionQuilletoQuille()
-    {
-        yield return null;
-
-        rougir = true;
-        noircir = true;
+        foreach (Transform child in transform)
         {
-            this.GetComponent<MeshRenderer>().material = QuilleChargee;
-            GameObject tmp = Instantiate(spiralemouvante, spiralefixeposition, Quaternion.identity);
-            GameObject effectmp = Instantiate(particulescharg, particuleposition, particulespirale.transform.rotation);
-            effectmp.transform.parent = this.transform;
-            for (var i = this.transform.childCount - 1; i >= 0; i--)
-            {
-                if (this.transform.GetChild(i).GetComponent<SpriteRenderer>() != null)
-                {
-                    tmp.transform.localScale *= 2f;
-                    break;
-                }
-            }
-            //spiralefixe.GetComponent<SpriteRenderer>().enabled = false;
-            Destroy(particulespirale);
-            Destroy(spiralefixe);
-            yield return new WaitForSeconds(2.0f);
-            this.GetComponent<MeshRenderer>().material = Originalmaterial;
+            if (particulespirale == null && child.TryGetComponent<ParticleSystem>(out _))
+                particulespirale = child.gameObject;
+            if (spiralefixe == null && child.TryGetComponent<SpriteRenderer>(out _))
+                spiralefixe = child.gameObject;
         }
-    }
-
-    public IEnumerator CheckRotationcoroutine()
-    {
-        yield return new WaitForSeconds(0.25f);
-        while(hasFallen==false)
-        {
-            Vector3 actual = new Vector3 (this.transform.rotation.x,this.transform.rotation.y,this.transform.rotation.z);
-             if((actual.x-startRotation.x > 45)||(actual.x-startRotation.x < -45)||(actual.z-startRotation.z < -45)||(actual.z-startRotation.z < -45))
-             {
-                 hasFallen = true;
-             }
-             yield return new WaitForSeconds(0.25f);
-        }
-        
-
-
-    }
-
-    private string GetDebuggerDisplay()
-    {
-        return ToString();
     }
 }
-
