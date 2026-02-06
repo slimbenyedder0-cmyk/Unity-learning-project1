@@ -1,41 +1,40 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.IO.Compression;
-using System.Dynamic;
 
+/// <summary>
+/// Gère le radar du joueur : détecte les spirales et active leur aspiration.
+/// </summary>
 public class SearchProcess : MonoBehaviour
 {
-    public bool Touche;
-    public List<GameObject> Ofinterestlist;
-    public Scr Ofinterestprocess;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-    void OnTriggerEnter(Collider other)
-    {
-        //Debug.Log(other.gameObject);
-            for (int i = Ofinterestlist.Count - 1; i >= 0; i--)
-            {
-                var Ofinterest = Ofinterestlist[i];
-            if (Ofinterest == other.gameObject && Ofinterest.GetComponent<Scr>().ismoving == false)
-            {
-                Ofinterest.GetComponent<Scr>().ismoving = true;
-                Ofinterest.GetComponent<Scr>().cubejoueur = this.transform.parent.gameObject;
-                //StartCoroutine(Ofinterestprocess.Coroutineofaspiration());
-                break;
-            }
-            else if (other.gameObject != Ofinterest)
-            {
-                Physics.IgnoreCollision(other.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
-            }
+    #region Variables
+    [Header("Radar")]
+    [Tooltip("Liste de tous les objets collectables enregistrés au Start.")]
+    public List<GameObject> Ofinterestlist = new List<GameObject>();
+    #endregion
 
-            }
-    }
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Se déclenche quand un objet entre dans le cercle (Trigger) du radar.
+    /// </summary>
+    private void OnTriggerEnter(Collider other)
     {
-        
+        // 1. On vérifie si l'objet qui entre possède le script SpiralePoints
+        if (other.TryGetComponent<SpiralePoints>(out SpiralePoints spirale))
+        {
+            // 2. On vérifie s'il fait partie de la liste des objets qui nous intéressent
+            if (Ofinterestlist.Contains(other.gameObject))
+            {
+                // 3. Si la spirale ne bouge pas encore, on active son aspiration
+                // Note : J'ai remplacé 'ismoving' par une propriété propre dans SpiralePoints
+                spirale.ActiverAspiration(this.transform.parent.gameObject);
+                
+                Debug.Log($"<color=cyan>Radar :</color> {other.name} détecté et activé !");
+            }
+        }
+        else
+        {
+            // 4. Si ce n'est pas une spirale, on demande à la physique d'ignorer la collision
+            // pour ne pas que le radar "pousse" les objets ou les quilles.
+            Physics.IgnoreCollision(other, GetComponent<Collider>());
+        }
     }
 }

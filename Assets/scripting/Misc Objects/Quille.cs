@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.Events; // Obligatoire pour les UnityEvents
+using UnityEngine.Events;
 using System.Collections;
 
 /// <summary>
-/// Gère le comportement d'une quille avec système d'événements pour la communication externe.
+/// Gère le comportement d'une quille : lévitation, bridage physique et événements.
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class Quille : MonoBehaviour
@@ -12,19 +12,24 @@ public class Quille : MonoBehaviour
     public enum FallState { Null, ByCube, ByQuille }
     #endregion
 
+    #region Variables - PHYSIQUE CRITIQUE (Giga Important)
+    [Header("!!! LIMITES PHYSIQUES (À FIXER) !!!")]
+    [Space(5)]
+    [Tooltip("Vitesse linéaire maximale. Empêche la quille de traverser les murs.")]
+    [SerializeField] private float maxVelocity = 20f;
+    
+    [Tooltip("Vitesse de rotation maximale. Empêche la quille de devenir un ventilateur incontrôlable.")]
+    [SerializeField] private float maxAngularVelocity = 15f;
+    #endregion
+
     #region Événements (Observer Pattern)
     [Header("Événements de Chute")]
-    [Tooltip("Se déclenche dès que la quille commence à tomber.")]
     public UnityEvent OnQuilleFallen;
-
-    [Tooltip("Se déclenche spécifiquement si le Cube fait tomber la quille.")]
     public UnityEvent OnHitByCube;
-
-    [Tooltip("Se déclenche si une autre quille fait tomber celle-ci.")]
     public UnityEvent OnHitByQuille;
     #endregion
 
-    #region Variables - Physique (Lévitation)
+    #region Variables - Lévitation
     [Header("Paramètres de Lévitation")]
     public float targetHeight = 1.2f;
     public float hoverForce = 20f;
@@ -68,7 +73,14 @@ public class Quille : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!hasFallen && rb != null)
+        if (rb == null) return;
+
+        // --- BRIDAGE PHYSIQUE (Sécurité anti-bug) ---
+        PhysicsSys.ClampVelocity(rb, maxVelocity);
+        PhysicsSys.ClampAngularVelocity(rb, maxAngularVelocity);
+
+        // --- LÉVITATION ---
+        if (!hasFallen)
         {
             PhysicsSys.HoverAtHeight(rb, targetHeight, hoverForce, damping);
         }
@@ -80,17 +92,16 @@ public class Quille : MonoBehaviour
     {
         if (isProcessed) return;
 
-        if (collision.gameObject.name == "Le Cube")
+        // Note : On utilise CompareTag ou le nom exact pour "Le Cube"
+        if (collision.gameObject.name == "Le Cube") 
         {
             myCause = FallState.ByCube;
-            // On déclenche l'événement spécifique au Cube
             OnHitByCube?.Invoke();
             StartCoroutine(HandleImpactSequence(touchageMat, particulesactiv));
         }
         else if (collision.gameObject.TryGetComponent<Quille>(out _))
         {
             myCause = FallState.ByQuille;
-            // On déclenche l'événement spécifique à la Quille
             OnHitByQuille?.Invoke();
             StartCoroutine(HandleImpactSequence(quilleChargeeMat, particulescharg, true));
         }
@@ -129,13 +140,8 @@ public class Quille : MonoBehaviour
             if (Vector3.Angle(transform.up, Vector3.up) > 45f)
             {
                 hasFallen = true;
-                
-                // --- DÉCLENCHEMENT DES ÉVÉNEMENTS ---
-                Debug.Log($"<color=green>EVENT :</color> {name} a déclenché ses événements de chute.");
-                
-                // On appelle OnQuilleFallen (général)
+                Debug.Log($"<color=green>EVENT :</color> {name} est tombée !");
                 OnQuilleFallen?.Invoke();
-
                 rb.useGravity = true; 
             }
         }

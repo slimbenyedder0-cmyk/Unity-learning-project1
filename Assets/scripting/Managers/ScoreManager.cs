@@ -1,20 +1,43 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
+/// <summary>
+/// Gère la logique du score de manière isolée.
+/// </summary>
 public class ScoreManager : MonoBehaviour
 {
-    public int currentScore;
-    
+    public static ScoreManager Instance { get; private set; }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [Header("Données")]
+    [SerializeField] private int currentScore = 0;
+
+    [Header("Événements")]
+    [Tooltip("Envoie le nouveau score à chaque modification.")]
+    public UnityEvent<int> OnScoreChanged;
+
+    private void Awake()
     {
-        currentScore = 0;
+        // Setup du Singleton
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Ajoute des points et prévient les abonnés.
+    /// </summary>
+    public void AddScore(int points)
     {
+        currentScore += points;
         
+        // On lance l'événement avec la nouvelle valeur
+        OnScoreChanged?.Invoke(currentScore);
+        
+        Debug.Log($"<color=green>SCORE :</color> {currentScore} (+{points})");
     }
+
+    public int GetCurrentScore() => currentScore;
 }

@@ -4972,9 +4972,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &6087769910323892499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4984,26 +4984,66 @@ MonoBehaviour:
   m_GameObject: {fileID: 2611483019866095747}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7bac8b501868a147a5f658165f7aec2, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ab82f5362c06284e862a9615f4948b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxVelocity: 20
+  maxAngularVelocity: 15
+  OnQuilleFallen:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7366509018102402182, guid: aa479eba1fc025247a8247dcafa86dcc, type: 3}
+        m_TargetAssemblyTypeName: ScoreManager, Assembly-CSharp
+        m_MethodName: AddScore
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHitByCube:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7366509018102402182, guid: aa479eba1fc025247a8247dcafa86dcc, type: 3}
+        m_TargetAssemblyTypeName: ScoreManager, Assembly-CSharp
+        m_MethodName: AddScore
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 15
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHitByQuille:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7366509018102402182, guid: aa479eba1fc025247a8247dcafa86dcc, type: 3}
+        m_TargetAssemblyTypeName: ScoreManager, Assembly-CSharp
+        m_MethodName: AddScore
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  targetHeight: 1.2
+  hoverForce: 20
+  damping: 5
   hasFallen: 0
-  cylinderRotation: {x: 0, y: 0, z: 0, w: 0}
-  startRotation: {x: 0, y: 0, z: 0}
-  cube: {fileID: 0}
-  spiralemouvante: {fileID: 4544974072315342822, guid: f841a4e61a4708948aa0d864ae8dd740, type: 3}
-  spiralefixe: {fileID: 0}
-  Originalmaterial: {fileID: 0}
-  rougir: 0
-  QuilleChargee: {fileID: 2100000, guid: a62a9660758c7ba49810ac51d6019fe1, type: 2}
-  Touchage: {fileID: 2100000, guid: 0e6b28eb332e2324c97be5523f885441, type: 2}
-  spiralefixeposition: {x: 0, y: 0, z: 0}
-  particulespirale: {fileID: 0}
-  particulescharg: {fileID: 5214862468702542733, guid: 3f204cd6deaef314bbd2741e7f079f28, type: 3}
-  particulesactiv: {fileID: 5214862468702542733, guid: 812e9cbe9fa375e439e4b0abd38a2063, type: 3}
-  noircir: 0
   myCause: 0
-  particuleposition: {x: 0, y: 0, z: 0}
+  spiralemouvante: {fileID: 5631895896676851647}
+  particulescharg: {fileID: 0}
+  particulesactiv: {fileID: 0}
+  quilleChargeeMat: {fileID: 0}
+  touchageMat: {fileID: 0}
 --- !u!1 &5631895896676851647
 GameObject:
   m_ObjectHideFlags: 0

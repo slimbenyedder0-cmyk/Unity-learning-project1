@@ -1,45 +1,68 @@
 using UnityEngine;
 
-public class ClickManager : MonoBehaviour
+/// <summary>
+/// Gère le suivi fluide de la caméra autour du joueur (Le Cube).
+/// </summary>
+public class CameraFollow : MonoBehaviour
 {
-    public GameObject referenceObject;
-    public Transform myCam;
-
-    Vector3 camPosition;
-    Vector3 cubePosition;
-    Vector3 offset;
-
-    void Start()
-    {
-        cubePosition = referenceObject.transform.position;
-        camPosition = myCam.position;
-        offset = camPosition - cubePosition;
-    }
-
-    void Update()
-    {
-        //myCam.position = getposition();
-        setPosition(myCam);
+    #region Variables - Configuration
+    [Header("Cibles")]
+    [SerializeField] private Transform target; // Ton "Le Cube"
     
-        var mr = referenceObject.GetComponent<MeshRenderer>();
-        var mats = mr.materials;
-        //mats[0] = referenceObject.GetComponent<CubeScript>().material1;   // drag your material into "secondMaterial" in Inspector
-        mr.materials = mats;
+    [Header("Réglages de Suivi")]
+    [SerializeField] private float smoothSpeed = 10f; // Vitesse de lissage
+    [SerializeField] private Vector3 offset; // Décalage par rapport au cube
+    
+    [Header("Options")]
+    [SerializeField] private bool lookAtTarget = true;
+    #endregion
+
+    #region Unity Lifecycle
+    private void Start()
+    {
+        // Si l'offset n'est pas réglé dans l'inspecteur, on le calcule automatiquement
+        if (offset == Vector3.zero && target != null)
+        {
+            offset = transform.position - target.position;
+        }
     }
 
-    public Vector3 getposition()
+    /// <summary>
+    /// LateUpdate est appelé après toutes les mises à jour de mouvement.
+    /// Indispensable pour éviter les tremblements de caméra.
+    /// </summary>
+    private void LateUpdate()
     {
-        //
-        return referenceObject.transform.position + offset;
-    }
+        if (target == null) return;
 
-    public void setPosition(Transform myObjectToSet)
-    {
-        myObjectToSet.position = referenceObject.transform.position + offset;
+        HandleMovement();
+        
+        if (lookAtTarget)
+        {
+            transform.LookAt(target);
+        }
     }
+    #endregion
 
-    public void cameraLookAtObject()
+    #region Logique de Caméra
+    private void HandleMovement()
     {
-        myCam.LookAt(referenceObject.transform);
+        // Position désirée (où la caméra devrait être)
+        Vector3 desiredPosition = target.position + offset;
+        
+        // On glisse doucement vers cette position (Lerp)
+        // Note : On utilise SmoothDamp ou Lerp pour un rendu pro
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
     }
+    #endregion
+
+    #region Utilitaires
+    /// <summary>
+    /// Permet de changer manuellement la cible si besoin.
+    /// </summary>
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+    #endregion
 }
