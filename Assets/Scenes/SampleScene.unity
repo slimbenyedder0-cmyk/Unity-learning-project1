@@ -1526,7 +1526,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e4fce1448f77d8498f833c026083912, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.016760731
+      value: -0.208
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6e4fce1448f77d8498f833c026083912, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4742,8 +4742,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1413d9286da6d3e4f8c70d002e0c30fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceObject: {fileID: 5560175261472671565}
-  myCam: {fileID: 12223884}
+  target: {fileID: 0}
+  smoothSpeed: 10
+  offset: {x: 0, y: 0, z: 0}
+  lookAtTarget: 1
 --- !u!4 &806145303 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1206348035330568455, guid: 3503bfdcb3169d64d9de62d91d8258e1, type: 3}
