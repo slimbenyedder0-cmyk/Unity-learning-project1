@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: lematosrouge
-    second: {fileID: 2100000, guid: 052cd89555c457f4aa584eba3c6862e9, type: 2}
+    second: {fileID: 2100000, guid: 1beccd239601fea429c50b7de310ac04, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
